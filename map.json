@@ -1,0 +1,18 @@
+[
+  "application_mixed.js",
+  "ajs.js",
+  
+  "libraries/config.js",
+  "libraries/log.js",
+  "libraries/message.js",
+  "libraries/validator.js",
+  "libraries/form.js",
+  "libraries/overlay.js",
+  
+  "controllers/_common/newsletter.js",
+  "controllers/home/index.js",
+  "controllers/events/index.js",
+  "controllers/auth/login.js",
+  "controllers/auth/facebook.js",
+  "controllers/users/signup.js"
+]
