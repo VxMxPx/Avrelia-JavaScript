@@ -7,12 +7,12 @@
  * @return {string}
  */
 function url(uri) {
-    var full_url = AJS.Library.Config.get('base_url');
+    var base_url = AJS.Library.Config.get('base_url');
 
-    if (full_url.substr(-1, 1) === '/') { full_url = full_url.substr(0, -1); }
+    if (base_url.substr(-1, 1) === '/') { base_url = base_url.substr(0, -1); }
     if (uri.substr(0, 1) === '/') { uri = uri.substr(1); }
 
-    return full_url + '/' + uri;
+    return base_url + '/' + uri;
 }
 
 /**

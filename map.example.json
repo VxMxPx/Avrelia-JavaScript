@@ -8,5 +8,5 @@
     "libraries/message.js",
     "libraries/validator.js",
     "libraries/form.js",
-    "libraries/overlay.js"
+    "libraries/overlay.js",
 ]
