@@ -5,12 +5,11 @@ AJS.register('Library.Form', function() {
     /**
      * Form class
      * --
-     * @param {object} $form  jQuery reference to the form.
-     * @param {string} url    The URL where the form supposed to be submitted.
-     *                        You can provide just uri/segments and the rest will
-     *                        be auto added. base_url + url || http://url
+     * @param {object} options Following options are available:
+     * - form : jQuery reference
+     * - url  : string              To where the form will be posted.
      */
-    var Form = function($form, url) {
+    var Form = function(options) {
 
         this.$form = $form;
 
