@@ -1,7 +1,15 @@
 AJS.register('Library.Overlay', function() {
 
     // Number of initialized overlays, used to generate unique IDs
-    var count    = 0;
+    var count    = 0,
+        defaults = {
+            loading   : false,
+            $parent   : false,
+            can_close : false,
+            on_click  : false,
+            id        : count,
+            calsses   : []
+        };
 
     /**
      * Construct overlay object - use: o = new Lib.Overlay();
@@ -17,37 +25,29 @@ AJS.register('Library.Overlay', function() {
     var Overlay = function(options) {
 
         // General options
-        this.options         = options;
-
-        // Overlay parent element
-        this.$parent_element = options.parent || false;
-
-        // This overlay unique ID
-        this.qid             = options.id || count;
+        this.opt = $.extend({}, defaults. options);
 
         // Create overlay element from template
         this.$overlay        = $('<div class="overlay" />');
 
-        // Set classes
-        this.classes         = options.classes || [];
-
         // Do we have parent?
-        if (!this.$parent_element) {
-            this.classes.push('overlay-expanded');
+        if (!this.opt.$parent) {
+            this.opt.classes.push('overlay-expanded');
         }
 
         // Set loading
-        if (options.loading) {
-            this.classes.push('loading');
+        if (this.opt.loading) {
+            this.opt.classes.push('loading');
         }
 
         // Set unique ID and classes to the element
-        this.$overlay.attr('id', this.qid);
+        this.$overlay.attr('id', this.opt.id);
 
-        if (this.classes.length) {
-            this.$overlay.addClass(this.classes.join(' '));
+        if (this.opt.classes.length) {
+            this.$overlay.addClass(this.opt.classes.join(' '));
         }
 
+        // If current overlay visible
         this.is_visible = false;
 
         // Increase count of initialized objects by one
@@ -84,12 +84,12 @@ AJS.register('Library.Overlay', function() {
 
             if (this.is_visible) { return false; }
 
-            if (this.$parent_element) {
+            if (this.opt.$parent) {
                 var parent = {
-                    top:     this.$parent_element.position().top,
-                    left:    this.$parent_element.position().left,
-                    width:   this.$parent_element.width(),
-                    height:  this.$parent_element.height()
+                    top:     this.opt.$parent.position().top,
+                    left:    this.opt.$parent.position().left,
+                    width:   this.opt.$parent.width(),
+                    height:  this.opt.$parent.height()
                 };
 
                 this.$overlay.css({
@@ -103,15 +103,15 @@ AJS.register('Library.Overlay', function() {
             }
 
             // Add events
-            if (this.options.can_close) {
+            if (this.opt.can_close) {
                 this.$overlay.on('click', function() {
                     _this.hide();
                 });
             }
 
-            if (typeof this.options.on_click === 'function') {
+            if (typeof this.opt.on_click === 'function') {
                 this.$overlay.on('click', function(e) {
-                    return this.options.on_click();
+                    return this.opt.on_click();
                 });
             }
 
@@ -133,10 +133,7 @@ AJS.register('Library.Overlay', function() {
                 _this.$overlay.remove();
             });
         }
-
     };
-
-    window.Overlay = Overlay;
 
     return Overlay;
 

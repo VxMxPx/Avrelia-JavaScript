@@ -1,6 +1,13 @@
 AJS.register('Library.Request', function() {
 
-    var Lib = AJS.Library;
+    var Lib      = AJS.Library,
+        defaults = {
+            url         : '',
+            message     : false,
+            overlay     : false,
+            data_type   : 'json',
+            on_multiple : 'last'
+        };
 
     /**
      * Request library is used to handle request to server, and can react on some
@@ -10,7 +17,8 @@ AJS.register('Library.Request', function() {
      * 
      * Available options are:
      * ======================
-     * url           -- string  Full url to which request should be made.
+     * url           -- string  A url to which request should be made. This can
+     *                          be full url, or only segment(s).
      * [message]     -- object  A message library to handle messages.
      * [overlay]     -- object  An overlay library to handle overlays.
      * [data_type]   -- string  ([xml], json, script, html) Expected data type.
@@ -30,6 +38,15 @@ AJS.register('Library.Request', function() {
      */
     var Request = function(options) {
 
+        this.opt = $.extend({}, defaults, options);
+
+        // Check if url contains :// if it does then assume that full url was
+        // provided - something like http://google.com or https://google.com;
+        // If that's true, then just set the url as it is. 
+        // If not, then call url() function, and pass in the url, to generate
+        // full absolute url.
+        this.opt.url = this.opt.url.match(/:\/\//) ? this.opt.url : url(this.opt.url);
+
         // Is any request in progress right now?
         this.in_progress = 0;
 
@@ -44,26 +61,40 @@ AJS.register('Library.Request', function() {
         _make_request: function(type, data) {
             data = data || null;
 
-            return $.ajax(this.url, {
+            request = $.ajax(this.url, {
                 type: type,
                 data: data
             });
+
+            // Increase requests currently in progress
+            this.in_progress++;
+
+            // Push request to the stack
+            this.stack.push(request);
         },
 
         do_post: function(data) {
-            
+            data = typeof data === 'object' ? data : {data: data};
+            return this._make_request('post', data);
         },
 
         do_get: function(data) {
-
+            data = typeof data === 'object' ? data : {data: data};
+            return this._make_request('get', data);
         },
 
         do_put: function(data) {
+            data = typeof data === 'object' ? data : {data: data};
 
+            data['_method'] = 'put';
+            return this._make_request('post', data);
         },
 
         do_delete: function(data) {
+            data = typeof data === 'object' ? data : {data: data};
 
+            data['_method'] = 'delete';
+            return this._make_request('post', data);
         }
 
     };

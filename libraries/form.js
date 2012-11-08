@@ -1,6 +1,13 @@
 AJS.register('Library.Form', function() {
 
-    var Lib = AJS.Library;
+    var Lib = AJS.Library,
+        defaults = {
+            $form    : false,
+            ignore   : [],
+            fields   : [],
+            defaults : [],
+            append   : []
+        };
 
     /**
      * Form library
@@ -9,22 +16,11 @@ AJS.register('Library.Form', function() {
      * - form       : object jQuery reference
      * - [ignore]   : array  An array of fields which should be ignored.
      * - [defaults] : array  Default value for when field has no value.
+     * - [append]   : array  List of fields which we want to append to the rest
+     *                       of the form fields.
      */
     var Form = function(options) {
-
-        this.$form = $form;
-
-        // List of fields we'll ignore
-        this.ignore = options.ignore || [];
-
-        // All form's fields
-        this.fields = [];
-
-        // Defaults
-        this.defaults = [];
-
-        // Appended fields.
-        this.appended = [];
+        this.opt = $.extend({}, defaults, options);
     };
 
     Form.prototype = {
@@ -39,8 +35,8 @@ AJS.register('Library.Form', function() {
          * @return {object} this
          */
         append_field: function($field) {
-            this.appended.push($field);
-            this.fields.push($field);
+            this.opt.append.push($field);
+            this.opt.fields.push($field);
             return this;
         },
 
@@ -52,8 +48,8 @@ AJS.register('Library.Form', function() {
          */
         refresh_fields: function() {
 
-            var fields = this.$form.find('input, textarea, select'),
-            ignore = this.ignore;
+            var fields = this.opt.$form.find('input, textarea, select'),
+                ignore = this.opt.ignore;
 
             if (ignore.length > 0) {
                 fields = $.map(fields, function(item, index) {
@@ -70,13 +66,13 @@ AJS.register('Library.Form', function() {
             }
 
             // Do we have any appended fields?
-            if (this.appended.length > 0) {
-                for (var i = this.appended.length - 1; i >= 0; i--) {
-                    fields.push(this.appended[i]);
+            if (this.opt.append.length > 0) {
+                for (var i = this.opt.append.length - 1; i >= 0; i--) {
+                    fields.push(this.opt.append[i]);
                 };
             }
 
-            this.fields = fields;
+            this.opt.fields = fields;
 
             return this;
         },
@@ -91,11 +87,11 @@ AJS.register('Library.Form', function() {
          */
         get_fields_raw: function() {
 
-            if (!this.fields.length) {
+            if (!this.opt.fields.length) {
                 this.refresh_fields();
             }
 
-            return $.map(this.fields, function(item, index) {
+            return $.map(this.opt.fields, function(item, index) {
                 var $item = $(item);
                 return {name: $item.attr('name'), value: $item.val(), field: $item};
             });
@@ -109,16 +105,16 @@ AJS.register('Library.Form', function() {
          */
         get_fields_post: function() {
             var result        = {},
-                fields_length = this.fields.length;
+                fields_length = this.opt.fields.length;
 
             if (!fields_length) {
                 this.refresh_fields();
-                fields_length = this.field.length;
+                fields_length = this.opt.field.length;
             }
 
             if (fields_length > 0) {
                 for (var i = 0; i < fields_length; i++) {
-                    var $field = $(this.fields[i]),
+                    var $field = $(this.opt.fields[i]),
                         type   = $field.attr('type'),
                         key    = $field.attr('name'),
                         value  = $field.val();
@@ -144,8 +140,8 @@ AJS.register('Library.Form', function() {
                 }
             }
 
-            if (this.defaults.length > 0) {
-                $.map(this.defaults, function(item, index) {
+            if (this.opt.defaults.length > 0) {
+                $.map(this.opt.defaults, function(item, index) {
                     if (typeof result[index] === 'undefined') {
                         result[index] = item;
                     }
