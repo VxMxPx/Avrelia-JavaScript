@@ -81,16 +81,17 @@ AJS.register('Library.Request', function() {
             }
 
             // Make new request finally
-            this.current_request = $.ajax(this.url, {
-                type: type,
-                data: data
+            this.current_request = $.ajax(this.opt.url, {
+                type     : type,
+                data     : data,
+                dataType : this.opt.data_type
             });
 
             // Register on complete event
-            this.complete(this._on_complete);
+            this.current_request.complete($.proxy(this._on_complete, this));
 
             // Increase requests currently in progress
-            this.in_progress++;
+            this.in_progress = this.in_progress+1;
 
             // Push request to the stack
             this.stack.push(this.current_request);
@@ -106,7 +107,7 @@ AJS.register('Library.Request', function() {
          */
         _on_complete: function(jqXHR, textStatus) {
             
-            this.in_progress--;
+            this.in_progress = this.in_progress-1;
 
             if (this.in_progress === 0 && this.opt.overlay) {
                 this.opt.overlay.hide();
@@ -137,24 +138,24 @@ AJS.register('Library.Request', function() {
         },
 
         do_post: function(data) {
-            data = typeof data === 'object' ? data : {data: data};
+            data = typeof data === 'object' ? data : {};
             return this._make_request('post', data);
         },
 
         do_get: function(data) {
-            data = typeof data === 'object' ? data : {data: data};
+            data = typeof data === 'object' ? data : {};
             return this._make_request('get', data);
         },
 
         do_put: function(data) {
-            data = typeof data === 'object' ? data : {data: data};
+            data = typeof data === 'object' ? data : {};
 
             data['_method'] = 'put';
             return this._make_request('post', data);
         },
 
         do_delete: function(data) {
-            data = typeof data === 'object' ? data : {data: data};
+            data = typeof data === 'object' ? data : {};
 
             data['_method'] = 'delete';
             return this._make_request('post', data);
