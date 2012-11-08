@@ -50,6 +50,9 @@ AJS.register('Library.Request', function() {
         // Is any request in progress right now?
         this.in_progress = 0;
 
+        // Current (or last) request
+        this.current_request = null;
+
         // All requests made so far.
         this.stack = [];
     };
@@ -61,16 +64,76 @@ AJS.register('Library.Request', function() {
         _make_request: function(type, data) {
             data = data || null;
 
-            request = $.ajax(this.url, {
+            // If we have overlay, then now is the time to show it.
+            // If anything is already in progress, then overlay is visible anyway.
+            if (!this.in_progress && this.opt.overlay) {
+                this.opt.overlay.show();
+            }
+
+            // If we allow only one, then return current if anything is in progress
+            if (this.in_progress > 0 && this.opt.on_multiple === 'first') {
+                return this.current_request;
+            }
+
+            // If we allow only last, then cancel everything currently in progress
+            if (this.in_progress > 0 && this.opt.on_multiple === 'last') {
+                this.cancel_all();
+            }
+
+            // Make new request finally
+            this.current_request = $.ajax(this.url, {
                 type: type,
                 data: data
             });
+
+            // Register on complete event
+            this.complete(this._on_complete);
 
             // Increase requests currently in progress
             this.in_progress++;
 
             // Push request to the stack
-            this.stack.push(request);
+            this.stack.push(this.current_request);
+
+            // Return it
+            return this.current_request;
+        },
+
+        /**
+         * When particular request finishes we'll trigger this, - 
+         * it will decrease in progress counter and hide overlay if needed + it
+         * will set messages, etc...
+         */
+        _on_complete: function(jqXHR, textStatus) {
+            
+            this.in_progress--;
+
+            if (this.in_progress === 0 && this.opt.overlay) {
+                this.opt.overlay.hide();
+            }
+
+            console.log(jqXHR);
+
+            // What's the status?
+            if (textStatus === 'success') {
+            }
+        },
+
+        /**
+         * Will cancel all request currently in progress.
+         */
+        cancel_all: function()
+        {
+            if (this.stack.length && this.in_progress) {
+
+                for (var i = this.stack.length - 1; i >= 0; i--) {
+                    this.stack[i].abort();
+                };
+
+                this.in_progress = 0;
+            }
+
+            return this;
         },
 
         do_post: function(data) {
