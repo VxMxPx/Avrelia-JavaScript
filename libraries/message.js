@@ -1,30 +1,59 @@
 AJS.register('Library.Message', function() {
 
+    var defaults = {
+            $wrapper        : false,
+            group           : true,
+            autohide        : false,
+            animation_speed : false,
+            in_animation    : false,
+            out_animation   : false
+        },
+
+        // Single message item template
+        template = ['<div><div class="alert">',
+                       '<button type="button" class="close" data-dismiss="alert">×</button>',
+                   '</div></div>'].join(''),
+
+        // Map types to css classes
+        types_map = { war: 'warn', ok: 'success', err: 'error', inf: 'info' };
+
+
     /**
      * Message class
      * --
-     * @param object  $wrapper   jQuery wrapper, will contain all messages.
-     * @param boolean putTogeter Put messages of the same type together.
+     * @param object  options  Following options are available:
+     * 
+     * $wrapper          : object  jQuery wrapper, which contain all messages.
+     * [group]           : boolean Group messages of same type together.
+     *                             Default = true
+     * [autohide]        : integer If set, messages will disapear after 
+     *                             particular amount of time.
+     *                             Default = false
+     * [animation_speed] : mixed   Speed of animations (int, 'fast', 'slow')
+     *                             Default = false
+     * [in_animation]    : string  Which animation to use on show.
+     *                             (jQuery animations)
+     *                             Default = false
+     * [out_animation]   : string  Which animation to use on hide.
+     *                             Default = false
      */
-    var Message = function($wrapper, putTogeter) {
-        this.putTogeter    = typeof putTogeter === 'undefined' ? true : !!putTogeter;
-        this.$wrapper      = $wrapper;
-        this.messages_list = null;
+    var Message = function(options) {
 
-        this._reset_messages_list();
+        this.opt = $.extend({}, defaults, options);
+
+        this.messages_list = {
+            'warn'   : [],
+            'info'   : [],
+            'error'  : [],
+            'success': []
+        };
+
+        this.autohide_timer = false;
     };
 
     Message.prototype = {
         
         constructor: Message,
-
-        // Map types from php to match js
-        types_map  : { war: 'warn', ok: 'success', err: 'error', inf: 'info' },
-
-        // Message template
-        template: ['<div><div class="alert">',
-                       '<button type="button" class="close" data-dismiss="alert">×</button>',
-                   '</div></div>'].join(''),
 
         _add: function(type, message, title) {
             if (title) {
@@ -42,7 +71,7 @@ AJS.register('Library.Message', function() {
             if (messages.length) {
                 for (var i = 0, l = messages.length; i < l; i++) {
                     var message = messages[i];
-                    message.type = this.types_map[message.type];
+                    message.type = types_map[message.type];
                     this[message.type](message.message);
                 }
             }
@@ -82,8 +111,16 @@ AJS.register('Library.Message', function() {
             };
         },
 
+        _show_wrapper: function() {
+            this.opt.$wrapper[this.opt.in_animation](this.opt.animation_speed);
+        },
+
+        _hide_wrapper: function() {
+            this.opt.$wrapper[this.opt.out_animation](this.opt.animation_speed);
+        },
+
         _push_to_stack: function(messages, type) {
-            var $message = $(this.template),
+            var $message = $(template),
                 $content = $message.find('.alert');
             
             type = type === 'warn' ? 'block' : type;
@@ -91,20 +128,20 @@ AJS.register('Library.Message', function() {
             $content.addClass('alert-'+type);
             $content.append(messages);
 
-            this.$wrapper.append($message.html());
+            this.opt.$wrapper.append($message.html());
         },
 
         show: function() {
             var _self  = this,
                 merged = {};
 
-            this.$wrapper.html('');
+            this.opt.$wrapper.html('');
 
             $.each(_self.messages_list, function(type, messages) {
                 for (var i = 0, l = messages.length; i < l; i++) {
                     var message = messages[i];
 
-                    if (_self.putTogeter) {
+                    if (_self.opt.group) {
                         if (!merged[type]) { merged[type] = ''; }
                         merged[type] += '<p>' + message + '</p>';
                     }
@@ -114,7 +151,7 @@ AJS.register('Library.Message', function() {
                 }
             });
 
-            if (_self.putTogeter) {
+            if (_self.opt.group) {
                 if (merged.warn)    _self._push_to_stack(merged.warn,    'warn');
                 if (merged.info)    _self._push_to_stack(merged.info,    'info');
                 if (merged.error)   _self._push_to_stack(merged.error,   'error');
@@ -122,6 +159,23 @@ AJS.register('Library.Message', function() {
             }
 
             this._reset_messages_list();
+
+            // Do we have autohide?
+            if (this.opt.autohide) {
+                // Do we have any previously set timer?
+                if (this.autohide_timer) {
+                    // Crush it now!!!
+                    clearTimeout(this.autohide_timer);
+                }
+                
+                // Set new timer
+                this.autohide_timer = setTimeout(this._hide_wrapper, this.opt.autohide);
+            }
+
+            // Should we show messages in some nice way?
+            if (this.opt.in_animation) {
+                this._show_wrapper();
+            }
         }
     };
 
