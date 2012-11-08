@@ -1,0 +1,12 @@
+[
+    "ajs.js",
+    "functions.js",
+    
+    "libraries/config.js",
+    "libraries/log.js",
+    "libraries/language.js",
+    "libraries/message.js",
+    "libraries/validator.js",
+    "libraries/form.js",
+    "libraries/overlay.js",
+]
