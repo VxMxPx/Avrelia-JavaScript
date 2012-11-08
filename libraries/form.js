@@ -3,34 +3,22 @@ AJS.register('Library.Form', function() {
     var Lib = AJS.Library;
 
     /**
-     * Form class
+     * Form library
      * --
      * @param {object} options Following options are available:
-     * - form : jQuery reference
-     * - url  : string              To where the form will be posted.
+     * - form       : object jQuery reference
+     * - [ignore]   : array  An array of fields which should be ignored.
+     * - [defaults] : array  Default value for when field has no value.
      */
     var Form = function(options) {
 
         this.$form = $form;
 
-        // Check if we have :// in url, - if not, prepend url from config.
-        this.url = (function() {
-            if (url.match('://')) {
-                return url;
-            }
-            else {
-                return Lib.Config.get('base_url') + url;
-            }
-        }());
-
         // List of fields we'll ignore
-        this.ignore = [];
+        this.ignore = options.ignore || [];
 
         // All form's fields
         this.fields = [];
-
-        // Message model
-        this.message = null;
 
         // Defaults
         this.defaults = [];
@@ -44,23 +32,6 @@ AJS.register('Library.Form', function() {
         constructor: Form,
 
         /**
-         * Specify list of fields which will be ignored
-         * @param  {array}  ignore An array of fields which should be ignored.
-         *                         This should contain either field name, of #id
-         * @return {object} this
-         */
-        ignore_fields: function(ignore) {
-
-            // Reset current fields
-            this.fields = [];
-
-            // Set ignore
-            this.ignore = ignore;
-
-            return this;
-        },
-
-        /**
          * Append new (jQuery) form field to the rest. This is useful if we wanna
          * use external form's fields.
          * --
@@ -68,22 +39,8 @@ AJS.register('Library.Form', function() {
          * @return {object} this
          */
         append_field: function($field) {
-
             this.appended.push($field);
             this.fields.push($field);
-            return this;
-        },
-
-        /**
-         * Register message model, in case we're expecting properly formatted json
-         * to be returned from submit method.
-         * @param  {object} message_model
-         * @return {object} this
-         */
-        register_message: function(message_model) {
-
-            this.message = message_model;
-
             return this;
         },
 
@@ -133,6 +90,11 @@ AJS.register('Library.Form', function() {
          *                 ]
          */
         get_fields_raw: function() {
+
+            if (!this.fields.length) {
+                this.refresh_fields();
+            }
+
             return $.map(this.fields, function(item, index) {
                 var $item = $(item);
                 return {name: $item.attr('name'), value: $item.val(), field: $item};
@@ -148,6 +110,11 @@ AJS.register('Library.Form', function() {
         get_fields_post: function() {
             var result        = {},
                 fields_length = this.fields.length;
+
+            if (!fields_length) {
+                this.refresh_fields();
+                fields_length = this.field.length;
+            }
 
             if (fields_length > 0) {
                 for (var i = 0; i < fields_length; i++) {
@@ -186,52 +153,6 @@ AJS.register('Library.Form', function() {
             }
 
             return result;
-        },
-
-        /**
-         * Set defaults for when particular field has no value.
-         * @param  {object} list {field_name: default, field_name_2: default}
-         * @return {object} this
-         */
-        set_defaults: function(defaults) {
-
-            this.defaults = defaults;
-            return this;
-        },
-
-        /**
-         * Register submit event, - when form will be submitted, default action 
-         * will be prevented and instead this class submit will run.
-         * --
-         * @return {object} this
-         */
-        register_submit: function() {
-
-            var _this = this;
-
-            this.$form.submit(function(e) {
-                e.preventDefault();
-                _this.submit();
-            });
-
-            return this;
-        },
-
-        /**
-         * Post the form to the selected URL
-         * @return {object} jQuery ajax request object
-         */
-        submit: function() {
-
-            if (this.fields.length === 0) {
-                this.refresh_fields();
-            }
-
-            return $.ajax({
-                type: 'POST',
-                url:  this.url,
-                data: this.get_fields_post()
-            });
         }
     };
 
