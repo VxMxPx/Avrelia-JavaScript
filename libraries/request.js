@@ -113,10 +113,37 @@ AJS.register('Library.Request', function() {
                 this.opt.overlay.hide();
             }
 
-            console.log(jqXHR);
-
             // What's the status?
             if (textStatus === 'success') {
+
+                // Extract JSON if expected or just return response
+                var response = this.opt.data_type === 'json' 
+                                    ? $.parseJSON(jqXHR.responseText)
+                                    : jqXHR.responseText;
+
+                // Now if we don't have object, no point to continue
+                if (typeof response !== 'object') {
+                    return response;
+                }
+
+                // Do we have redirect?
+                if (typeof response.redirect === 'string') {
+                    if (!response.redirect.match(/:\/\//)) {
+                        response.redirect = url(response.redirect);
+                    }
+
+                    // Here we go ...
+                    window.location.replace(response.redirect);
+                    return;
+                }
+
+                // Handle messages now!
+                if (this.opt.message && typeof response.messages === 'object') {
+                    this.opt.message.from_array(response.messages);
+                }
+
+                // That's it...
+                return response;
             }
         },
 
