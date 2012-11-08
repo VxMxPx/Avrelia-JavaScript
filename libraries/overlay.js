@@ -8,7 +8,7 @@ AJS.register('Library.Overlay', function() {
             can_close : false,
             on_click  : false,
             id        : count,
-            calsses   : []
+            classes   : []
         };
 
     /**
@@ -25,7 +25,7 @@ AJS.register('Library.Overlay', function() {
     var Overlay = function(options) {
 
         // General options
-        this.opt = $.extend({}, defaults. options);
+        this.opt = $.extend({}, defaults, options);
 
         // Create overlay element from template
         this.$overlay        = $('<div class="overlay" />');
