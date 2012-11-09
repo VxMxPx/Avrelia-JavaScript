@@ -109,7 +109,7 @@ AJS.register('Library.Form', function() {
 
             if (!fields_length) {
                 this.refresh_fields();
-                fields_length = this.opt.field.length;
+                fields_length = this.opt.fields.length;
             }
 
             if (fields_length > 0) {
