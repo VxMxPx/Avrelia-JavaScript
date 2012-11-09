@@ -2,6 +2,7 @@ AJS.register('Library.Message', function() {
 
     var defaults = {
             $wrapper        : false,
+            can_close       : true,
             group           : true,
             autohide        : false,
             animation_speed : false,
@@ -24,6 +25,8 @@ AJS.register('Library.Message', function() {
      * @param object  options  Following options are available:
      * 
      * $wrapper          : object  jQuery wrapper, which contain all messages.
+     * [can_close]       : boolean Can messages be closed (they have -x-)
+     *                             Default = true
      * [group]           : boolean Group messages of same type together.
      *                             Default = true
      * [autohide]        : integer If set, messages will disapear after 
@@ -123,6 +126,11 @@ AJS.register('Library.Message', function() {
             var $message = $(template),
                 $content = $message.find('.alert');
             
+            // Can't close?
+            if (!this.opt.can_close) {
+                $message.find('button.close').remove();
+            }
+
             type = type === 'warn' ? 'block' : type;
 
             $content.addClass('alert-'+type);
@@ -169,7 +177,9 @@ AJS.register('Library.Message', function() {
                 }
                 
                 // Set new timer
-                this.autohide_timer = setTimeout(this._hide_wrapper, this.opt.autohide);
+                this.autohide_timer = setTimeout(
+                                        $.proxy(this._hide_wrapper, this), 
+                                        this.opt.autohide);
             }
 
             // Should we show messages in some nice way?
