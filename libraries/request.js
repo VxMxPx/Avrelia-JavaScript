@@ -6,7 +6,7 @@ AJS.register('Library.Request', function() {
             message     : false,
             overlay     : false,
             data_type   : 'json',
-            on_multiple : 'last'
+            limit       : 'last'
         };
 
     /**
@@ -22,7 +22,7 @@ AJS.register('Library.Request', function() {
      * [message]     -- object  A message library to handle messages.
      * [overlay]     -- object  An overlay library to handle overlays.
      * [data_type]   -- string  ([xml], json, script, html) Expected data type.
-     * [on_multiple] -- string  (first, [last], all) What happens when we have
+     * [limit]       -- string  (first, [last], false) What happens when we have
      *                          multiple request, should we keep only first,
      *                          only last, or all of them.
      *
@@ -64,20 +64,23 @@ AJS.register('Library.Request', function() {
         _make_request: function(type, data) {
             data = data || null;
 
-            // If we have overlay, then now is the time to show it.
-            // If anything is already in progress, then overlay is visible anyway.
-            if (!this.in_progress && this.opt.overlay) {
-                this.opt.overlay.show();
-            }
+            // Increase requests currently in progress
+            this.in_progress = this.in_progress+1;
 
             // If we allow only one, then return current if anything is in progress
-            if (this.in_progress > 0 && this.opt.on_multiple === 'first') {
+            if (this.in_progress > 1 && this.opt.limit === 'first') {
                 return this.current_request;
             }
 
             // If we allow only last, then cancel everything currently in progress
-            if (this.in_progress > 0 && this.opt.on_multiple === 'last') {
+            if (this.in_progress > 1 && this.opt.limit === 'last') {
                 this.cancel_all();
+            }
+
+            // If we have overlay, then now is the time to show it.
+            // If anything is already in progress, then overlay is visible anyway.
+            if (this.in_progress === 1 && this.opt.overlay) {
+                this.opt.overlay.show();
             }
 
             // Make new request finally
@@ -89,9 +92,6 @@ AJS.register('Library.Request', function() {
 
             // Register on complete event
             this.current_request.complete($.proxy(this._on_complete, this));
-
-            // Increase requests currently in progress
-            this.in_progress = this.in_progress+1;
 
             // Push request to the stack
             this.stack.push(this.current_request);
@@ -157,8 +157,6 @@ AJS.register('Library.Request', function() {
                 for (var i = this.stack.length - 1; i >= 0; i--) {
                     this.stack[i].abort();
                 };
-
-                this.in_progress = 0;
             }
 
             return this;
