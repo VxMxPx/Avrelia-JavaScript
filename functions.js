@@ -9,8 +9,13 @@
 function url(uri) {
     var base_url = AJS.Library.Config.get('base_url');
 
-    if (base_url.substr(-1, 1) === '/') { base_url = base_url.substr(0, -1); }
-    if (uri.substr(0, 1) === '/') { uri = uri.substr(1); }
+    if (base_url.substr(-1, 1) === '/') { 
+        base_url = base_url.substr(0, base_url.length - 1); 
+    }
+    
+    if (uri.substr(0, 1) === '/') { 
+        uri = uri.substr(1); 
+    }
 
     return base_url + '/' + uri;
 }
