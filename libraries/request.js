@@ -2,29 +2,29 @@ AJS.register('Library.Request', function() {
 
     var Lib      = AJS.Library,
         defaults = {
-            url         : '',
-            message     : false,
-            overlay     : false,
-            data_type   : 'json',
-            limit       : 'last'
+            url     : '',
+            message : false,
+            overlay : false,
+            type    : 'json',
+            limit   : 'last'
         };
 
     /**
-     * Request library is used to handle request to server, and can react on some
-     * types of responses - like redirect, messages, etc...
+     * Request library is used to handle request to server, 
+     * and can react on some types of responses - like redirect, messages, etc..
      * --
      * @param {array} options 
      * 
      * Available options are:
      * ======================
-     * url           -- string  A url to which request should be made. This can
-     *                          be full url, or only segment(s).
-     * [message]     -- object  A message library to handle messages.
-     * [overlay]     -- object  An overlay library to handle overlays.
-     * [data_type]   -- string  ([xml], json, script, html) Expected data type.
-     * [limit]       -- string  (first, [last], false) What happens when we have
-     *                          multiple request, should we keep only first,
-     *                          only last, or all of them.
+     * url       -- string  A url to which request should be made. This can
+     *                      be full url, or only segment(s).
+     * [message] -- object  A message library to handle messages.
+     * [overlay] -- object  An overlay library to handle overlays.
+     * [type]    -- string  ([xml], json, script, html) Expected data type.
+     * [limit]   -- string  (first, [last], false) What happens when we have
+     *                      multiple request, should we keep only first,
+     *                      only last, or all of them.
      *
      * Responses which this library will handle properly:
      * ==================================================
@@ -87,11 +87,11 @@ AJS.register('Library.Request', function() {
             this.current_request = $.ajax(this.opt.url, {
                 type     : type,
                 data     : data,
-                dataType : this.opt.data_type
+                dataType : this.opt.type
             });
 
             // Register on complete event
-            this.current_request.complete($.proxy(this._on_complete, this));
+            this.current_request.always($.proxy(this._on_complete, this));
 
             // Push request to the stack
             this.stack.push(this.current_request);
@@ -117,7 +117,7 @@ AJS.register('Library.Request', function() {
             if (textStatus === 'success') {
 
                 // Extract JSON if expected or just return response
-                var response = this.opt.data_type === 'json' 
+                var response = this.opt.type === 'json' 
                                     ? $.parseJSON(jqXHR.responseText)
                                     : jqXHR.responseText;
 
