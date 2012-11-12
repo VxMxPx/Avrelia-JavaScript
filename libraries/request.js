@@ -10,11 +10,11 @@ AJS.register('Library.Request', function() {
         };
 
     /**
-     * Request library is used to handle request to server, 
+     * Request library is used to handle request to server,
      * and can react on some types of responses - like redirect, messages, etc..
      * --
-     * @param {array} options 
-     * 
+     * @param {array} options
+     *
      * Available options are:
      * ======================
      * url       -- string  A url to which request should be made. This can
@@ -29,11 +29,11 @@ AJS.register('Library.Request', function() {
      * Responses which this library will handle properly:
      * ==================================================
      * status     -- boolean Status of request (was successful or not).
-     * [redirect] -- string  Should redirect be preformed, 
-     *                       www-address where to go. 
+     * [redirect] -- string  Should redirect be preformed,
+     *                       www-address where to go.
      * [messages] -- array   List of messages to display.
      * [log]      -- array   Only for debugging.
-     * [data]     -- mixed   Any data that server might wanna send back 
+     * [data]     -- mixed   Any data that server might wanna send back
      *                       for any reason.
      */
     var Request = function(options) {
@@ -42,7 +42,7 @@ AJS.register('Library.Request', function() {
 
         // Check if url contains :// if it does then assume that full url was
         // provided - something like http://google.com or https://google.com;
-        // If that's true, then just set the url as it is. 
+        // If that's true, then just set the url as it is.
         // If not, then call url() function, and pass in the url, to generate
         // full absolute url.
         this.opt.url = this.opt.url.match(/:\/\//) ? this.opt.url : url(this.opt.url);
@@ -101,12 +101,14 @@ AJS.register('Library.Request', function() {
         },
 
         /**
-         * When particular request finishes we'll trigger this, - 
+         * When particular request finishes we'll trigger this, -
          * it will decrease in progress counter and hide overlay if needed + it
          * will set messages, etc...
          */
         _on_complete: function(jqXHR, textStatus) {
             
+            var response = '';
+
             this.in_progress = this.in_progress-1;
 
             if (this.in_progress === 0 && this.opt.overlay) {
@@ -117,9 +119,15 @@ AJS.register('Library.Request', function() {
             if (textStatus === 'success') {
 
                 // Extract JSON if expected or just return response
-                var response = this.opt.type === 'json' 
-                                    ? $.parseJSON(jqXHR.responseText)
-                                    : jqXHR.responseText;
+                if (typeof jqXHR.responseText === 'string' &&
+                        this.opt.type === 'json') {
+                    response = $.parseJSON(jqXHR.responseText);
+                }
+                else {
+                    response = typeof jqXHR.responseText !== 'undefined' ?
+                                    jqXHR.responseText :
+                                    jqXHR;
+                }
 
                 // Now if we don't have object, no point to continue
                 if (typeof response !== 'object') {
@@ -140,6 +148,7 @@ AJS.register('Library.Request', function() {
                 // Handle messages now!
                 if (this.opt.message && typeof response.messages === 'object') {
                     this.opt.message.from_array(response.messages);
+                    this.opt.message.show();
                 }
 
                 // That's it...
@@ -156,7 +165,7 @@ AJS.register('Library.Request', function() {
 
                 for (var i = this.stack.length - 1; i >= 0; i--) {
                     this.stack[i].abort();
-                };
+                }
             }
 
             return this;

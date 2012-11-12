@@ -23,13 +23,13 @@ AJS.register('Library.Message', function() {
      * Message class
      * --
      * @param object  options  Following options are available:
-     * 
+     *
      * $wrapper          : object  jQuery wrapper, which contain all messages.
      * [can_close]       : boolean Can messages be closed (they have -x-)
      *                             Default = true
      * [group]           : boolean Group messages of same type together.
      *                             Default = true
-     * [autohide]        : integer If set, messages will disapear after 
+     * [autohide]        : integer If set, messages will disapear after
      *                             particular amount of time.
      *                             Default = false
      * [animation_speed] : mixed   Speed of animations (int, 'fast', 'slow')
@@ -178,7 +178,7 @@ AJS.register('Library.Message', function() {
                 
                 // Set new timer
                 this.autohide_timer = setTimeout(
-                                        $.proxy(this._hide_wrapper, this), 
+                                        $.proxy(this._hide_wrapper, this),
                                         this.opt.autohide);
             }
 
@@ -186,6 +186,13 @@ AJS.register('Library.Message', function() {
             if (this.opt.in_animation) {
                 this._show_wrapper();
             }
+            else {
+                this.opt.$wrapper.show();
+            }
+        },
+
+        hide: function() {
+            this.opt.$wrapper.hide();
         }
     };
 
