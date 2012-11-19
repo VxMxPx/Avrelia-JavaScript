@@ -5,6 +5,7 @@ AJS.register('Library.Overlay', function() {
         defaults = {
             loading   : false,
             $parent   : false,
+            padding   : 0,
             can_close : false,
             on_click  : false,
             id        : count,
@@ -17,6 +18,8 @@ AJS.register('Library.Overlay', function() {
      * - loading   : boolean           Loading indicator will be displayed.
      * - parent    : jQuery reference  Parent element to which overlay will be attached.
      *                                 Leave it empty for full screen overlay.
+     * - padding   : integer           Overlay padding when displayed. Only if
+     *                                 you provided parent element.
      * - can_close : boolean           If true, click on overlay will hide it.
      * - on_click  : function          Callback for when overlay is clicked.
      * - id        : string            Specific ID.
@@ -86,18 +89,18 @@ AJS.register('Library.Overlay', function() {
 
             if (this.opt.$parent) {
                 var parent = {
-                    top:     this.opt.$parent.position().top,
-                    left:    this.opt.$parent.position().left,
-                    width:   this.opt.$parent.width(),
-                    height:  this.opt.$parent.height()
+                    top:     this.opt.$parent.offset().top,
+                    left:    this.opt.$parent.offset().left,
+                    width:   this.opt.$parent.outerWidth(),
+                    height:  this.opt.$parent.outerHeight()
                 };
 
                 this.$overlay.css({
                     display  : 'none',
-                    top      : parent.top,
-                    left     : parent.left,
-                    width    : parent.width,
-                    height   : parent.height,
+                    top      : parent.top - _this.opt.padding,
+                    left     : parent.left - _this.opt.padding,
+                    width    : parent.width + (_this.opt.padding * 2),
+                    height   : parent.height + (_this.opt.padding * 2),
                     position : 'absolute'
                 });
             }
