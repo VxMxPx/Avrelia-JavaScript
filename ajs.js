@@ -70,7 +70,7 @@
             }
 
             // Check if we're having Controller || Library
-            if (segments[0] !== 'Controller' && segments[0] !== 'Library') {
+            if (segments[0] !== 'Controller' && segments[0] !== 'Library' && segments[0] !== 'Model') {
 
                 trigger_error('You must register either `Controller`, `Library` ' + 
                               'or `Model` you have: `' + segments[0] + '`.');

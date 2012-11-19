@@ -2,11 +2,11 @@ AJS.register('Library.Request', function() {
 
     var Lib      = AJS.Library,
         defaults = {
-            url     : '',
-            message : false,
-            overlay : false,
-            type    : 'json',
-            limit   : 'last'
+            url             : '',
+            OverlayLibrary  : false,
+            ResponseLibrary : false,
+            type            : 'json',
+            limit           : 'last'
         };
 
     /**
@@ -17,24 +17,16 @@ AJS.register('Library.Request', function() {
      *
      * Available options are:
      * ======================
-     * url       -- string  A url to which request should be made. This can
-     *                      be full url, or only segment(s).
-     * [message] -- object  A message library to handle messages.
-     * [overlay] -- object  An overlay library to handle overlays.
-     * [type]    -- string  ([xml], json, script, html) Expected data type.
-     * [limit]   -- string  (first, [last], false) What happens when we have
-     *                      multiple request, should we keep only first,
-     *                      only last, or all of them.
-     *
-     * Responses which this library will handle properly:
-     * ==================================================
-     * status     -- boolean Status of request (was successful or not).
-     * [redirect] -- string  Should redirect be preformed,
-     *                       www-address where to go.
-     * [messages] -- array   List of messages to display.
-     * [log]      -- array   Only for debugging.
-     * [data]     -- mixed   Any data that server might wanna send back
-     *                       for any reason.
+     * url               -- string  A url to which request should be made. 
+     *                              This can be full url, or only segment(s).
+     *                              If only segments, then full url will be
+     *                              created using Lib.Config.get('base_url')
+     * [OverlayLibrary]  -- object  An overlay library to handle overlays.
+     * [ResponseLibrary] -- object  Response library handler.
+     * [type]            -- string  ([xml], json, script, html) Expected data type.
+     * [limit]           -- string  (first, [last], false) What happens when we have
+     *                              multiple request, should we keep only first,
+     *                              only last, or all of them.
      */
     var Request = function(options) {
 
@@ -53,6 +45,9 @@ AJS.register('Library.Request', function() {
         // Current (or last) request
         this.current_request = null;
 
+        // Temporarily appended URI.
+        this.appeneded = null;
+
         // All requests made so far.
         this.stack = [];
     };
@@ -61,11 +56,53 @@ AJS.register('Library.Request', function() {
 
         constructor: Request,
 
+        /**
+         * Take get, and appended get / segments and create full URL. After that,
+         * it will unset temporarily appended items.
+         * --
+         * @return {string}
+         */
+        _resolve_url : function() {
+            var full_url = this.opt.url;
+
+
+            if (this.appended) {
+
+                // Question mark in our URL?
+                if (full_url.match(/\?/)) {
+                    var segments = full_url.split(/\?/);
+
+                    full_url = segments.shift() + '/' + this.appended;
+
+                    if (segments.length) {
+
+                        full_url = full_url + 
+                            (this.appended.match(/\?/) ? '&' : '?') + 
+                            segments.join('?');
+                    }
+                }
+                else {
+
+                    full_url = full_url + '/' + this.appended;
+                }
+
+                // Reset it back to null, as it is temporary, and valid only per
+                // one request.
+                this.appended = null;
+
+                // Cleanup the trash
+                full_url = full_url.replace(/([^:\/\/])[\/]+/g, '$1/');
+            }
+
+            return full_url;
+        },
+
         _make_request: function(type, data) {
+
             data = data || null;
 
             // Increase requests currently in progress
-            this.in_progress = this.in_progress+1;
+            this.in_progress = this.in_progress + 1;
 
             // If we allow only one, then return current if anything is in progress
             if (this.in_progress > 1 && this.opt.limit === 'first') {
@@ -79,12 +116,12 @@ AJS.register('Library.Request', function() {
 
             // If we have overlay, then now is the time to show it.
             // If anything is already in progress, then overlay is visible anyway.
-            if (this.in_progress === 1 && this.opt.overlay) {
-                this.opt.overlay.show();
+            if (this.in_progress === 1 && this.opt.OverlayLibrary) {
+                this.opt.OverlayLibrary.show();
             }
 
             // Make new request finally
-            this.current_request = $.ajax(this.opt.url, {
+            this.current_request = $.ajax(this._resolve_url(), {
                 type     : type,
                 data     : data,
                 dataType : this.opt.type
@@ -111,49 +148,30 @@ AJS.register('Library.Request', function() {
 
             this.in_progress = this.in_progress-1;
 
-            if (this.in_progress === 0 && this.opt.overlay) {
-                this.opt.overlay.hide();
+            if (this.in_progress === 0 && this.opt.OverlayLibrary) {
+                this.opt.OverlayLibrary.hide();
             }
 
-            // What's the status?
-            if (textStatus === 'success') {
+            if (this.opt.ResponseLibrary) {
 
-                // Extract JSON if expected or just return response
-                if (typeof jqXHR.responseText === 'string' &&
-                        this.opt.type === 'json') {
-                    response = $.parseJSON(jqXHR.responseText);
-                }
-                else {
-                    response = typeof jqXHR.responseText !== 'undefined' ?
-                                    jqXHR.responseText :
-                                    jqXHR;
-                }
-
-                // Now if we don't have object, no point to continue
-                if (typeof response !== 'object') {
-                    return response;
-                }
-
-                // Do we have redirect?
-                if (typeof response.redirect === 'string') {
-                    if (!response.redirect.match(/:\/\//)) {
-                        response.redirect = url(response.redirect);
-                    }
-
-                    // Here we go ...
-                    window.location.replace(response.redirect);
-                    return;
-                }
-
-                // Handle messages now!
-                if (this.opt.message && typeof response.messages === 'object') {
-                    this.opt.message.from_array(response.messages);
-                    this.opt.message.show();
-                }
-
-                // That's it...
-                return response;
+                return this.opt.ResponseLibrary.handle(jqXHR, textStatus);
+            } 
+            else {
+                
+                return jqXHR;
             }
+        },
+
+        /**
+         * Append URI to the main URL. After the request was made, this will be
+         * removed automatically.
+         * --
+         * @param  {string} uri Example 'filter.json?order=desc'
+         * --
+         * @return {void}
+         */
+        append_uri: function(uri) {
+            this.appended = uri;
         },
 
         /**

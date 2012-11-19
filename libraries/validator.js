@@ -1,10 +1,26 @@
 AJS.register('Library.Validator', function() {
 
-    var Validator = function($form, message) {
-        this.$form   = $form;
-        this.fields  = [];
-        this.message = message;
-        this.valid   = true;
+    var defaults = {
+        $form          : false,
+        MessageLibrary : false
+    };
+
+    /**
+     * Validator allow us to easily check values of various form fields.
+     * --
+     * @param {object} options
+     *
+     * Available options are:
+     * ======================
+     * $form            -- array  jQuery Reference to the form we wanna check.
+     * [MessageLibrary] -- object If you wanna to display message when the 
+     *                            field validation fails.
+     */
+    var Validator = function(options) {
+
+        this.opt    = $.extend({}, defaults, options);
+        this.valid  = true;
+        this.fields = [];
     };
 
     Validator.prototype = {
@@ -27,7 +43,7 @@ AJS.register('Library.Validator', function() {
 
             for (var i = 0, l = this.fields.length; i < l; i++) {
                 var current = this.fields[i],
-                    $field = this.$form.find(current.field);
+                    $field = this.opt.$form.find(current.field);
 
                 for (var i2 = 0, l2 = current.rules.length; i2 < l2; i2++) {
                     this._validate_field($field, current.rules[i2]);
@@ -44,13 +60,13 @@ AJS.register('Library.Validator', function() {
             if (rule.required === true) {
                 if (type === 'checkbox') {
                     if (field.attr('checked') !== 'checked') {
-                        this.message.warn(rule.message);
+                        this.opt.MessageLibrary.warn(rule.message);
                         this.valid = false;
                     }
                 }
                 else {
                     if (!field.val().length) {
-                        this.message.warn(rule.message);
+                        this.opt.MessageLibrary.warn(rule.message);
                         this.valid = false;
                     }
                 }
@@ -59,7 +75,7 @@ AJS.register('Library.Validator', function() {
             // Rule length -----------------------------------------------------
             if (rule.length) {
                 if (field.val().length !== rule.length) {
-                    this.message.warn(rule.message);
+                    this.opt.MessageLibrary.warn(rule.message);
                     this.valid = false;
                 }
             }
@@ -67,7 +83,7 @@ AJS.register('Library.Validator', function() {
             // Minimum length --------------------------------------------------
             if (rule.min_length) {
                 if (field.val().length < rule.min_length) {
-                    this.message.warn(rule.message);
+                    this.opt.MessageLibrary.warn(rule.message);
                     this.valid = false;
                 }
             }
@@ -75,13 +91,13 @@ AJS.register('Library.Validator', function() {
             // Rule equals -----------------------------------------------------
             if (rule.equals) {
                 var rule_equals_val = 
-                    typeof this.$form.find(rule.equals)['val'] !== 'undefined'
-                        ? this.$form.find(rule.equals)['val']()
+                    typeof this.opt.$form.find(rule.equals)['val'] !== 'undefined'
+                        ? this.opt.$form.find(rule.equals)['val']()
                         : false;
 
                 if (rule_equals_val === false || 
                         field.val() !== rule_equals_val) {
-                    this.message.warn(rule.message);
+                    this.opt.MessageLibrary.warn(rule.message);
                     this.valid = false;
                 }
             }
@@ -89,7 +105,7 @@ AJS.register('Library.Validator', function() {
             // Rule match ------------------------------------------------------
             if (rule.is_match) {
                 if (field.val().match(rule.is_match) === null) {
-                    this.message.warn(rule.message);
+                    this.opt.MessageLibrary.warn(rule.message);
                     this.valid = false;
                 }
             }
@@ -97,7 +113,7 @@ AJS.register('Library.Validator', function() {
             // Rule is_email ---------------------------------------------------
             if (rule.is_email) {
                 if (field.val().match(/^(.+@.+\..+)$/) === null) {
-                    this.message.warn(rule.message);
+                    this.opt.MessageLibrary.warn(rule.message);
                     this.valid = false;
                 }
             }
