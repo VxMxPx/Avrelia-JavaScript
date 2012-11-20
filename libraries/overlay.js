@@ -5,6 +5,7 @@ AJS.register('Library.Overlay', function() {
         defaults = {
             loading   : false,
             $parent   : false,
+            text      : null,
             padding   : 0,
             can_close : false,
             on_click  : false,
@@ -31,11 +32,16 @@ AJS.register('Library.Overlay', function() {
         this.opt = $.extend({}, defaults, options);
 
         // Create overlay element from template
-        this.$overlay        = $('<div class="overlay" />');
+        this.$overlay        = $('<div class=overlay />');
 
         // Do we have parent?
         if (!this.opt.$parent) {
             this.opt.classes.push('overlay-expanded');
+        }
+
+        // Do we have text?
+        if (this.opt.text) {
+            this.$overlay.append('<div class=text>' + this.opt.text + '</div>');
         }
 
         // Set loading
@@ -43,6 +49,12 @@ AJS.register('Library.Overlay', function() {
             this.opt.classes.push('loading');
         }
 
+        // If we have id which is completely the same as count, then we'll
+        // prepend something, so that  it won't be just a number.
+        if (this.opt.id === count) {
+            this.opt.id = 'ajs_overlay_' + this.opt.id;
+        }
+        
         // Set unique ID and classes to the element
         this.$overlay.attr('id', this.opt.id);
 
