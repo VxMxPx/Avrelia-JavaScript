@@ -21,7 +21,9 @@ AJS.register('Library.Request', function() {
      *                              This can be full url, or only segment(s).
      *                              If only segments, then full url will be
      *                              created using Lib.Config.get('base_url')
-     * [OverlayLibrary]  -- object  An overlay library to handle overlays.
+     * [OverlayLibrary]  -- mixed   An overlay library to handle overlays.
+     *                              This can be an array with more than just one
+     *                              overlay library.
      * [ResponseLibrary] -- object  Response library handler.
      * [type]            -- string  ([xml], json, script, html) Expected data type.
      * [limit]           -- string  (first, [last], false) What happens when we have
@@ -55,6 +57,44 @@ AJS.register('Library.Request', function() {
     Request.prototype = {
 
         constructor: Request,
+
+        _show_overlays : function() {
+
+            // Check if we have any overlay at all...
+            if (this.opt.OverlayLibrary) {
+
+                // Check if is one library of array of multiple libraries
+                if (typeof this.opt.OverlayLibrary['opt'] === 'undefined') {
+
+                    // We have multiple libraries
+                    for (var i = this.opt.OverlayLibrary.length - 1; i >= 0; i--) {
+                        this.opt.OverlayLibrary[i].show();
+                    };
+                }
+                else {
+                    this.opt.OverlayLibrary.show();
+                }
+            }
+        },
+
+        _hide_overlays : function() {
+
+            // Check if we have any overlay at all...
+            if (this.opt.OverlayLibrary) {
+
+                // Check if is one library of array of multiple libraries
+                if (typeof this.opt.OverlayLibrary['opt'] === 'undefined') {
+
+                    // We have multiple libraries
+                    for (var i = this.opt.OverlayLibrary.length - 1; i >= 0; i--) {
+                        this.opt.OverlayLibrary[i].hide();
+                    };
+                }
+                else {
+                    this.opt.OverlayLibrary.hide();
+                }
+            }
+        },
 
         /**
          * Take get, and appended get / segments and create full URL. After that,
@@ -116,8 +156,8 @@ AJS.register('Library.Request', function() {
 
             // If we have overlay, then now is the time to show it.
             // If anything is already in progress, then overlay is visible anyway.
-            if (this.in_progress === 1 && this.opt.OverlayLibrary) {
-                this.opt.OverlayLibrary.show();
+            if (this.in_progress === 1) {
+                this._show_overlays();
             }
 
             // Make new request finally
@@ -148,8 +188,8 @@ AJS.register('Library.Request', function() {
 
             this.in_progress = this.in_progress-1;
 
-            if (this.in_progress === 0 && this.opt.OverlayLibrary) {
-                this.opt.OverlayLibrary.hide();
+            if (this.in_progress === 0) {
+                this._hide_overlays();
             }
 
             if (this.opt.ResponseLibrary) {
