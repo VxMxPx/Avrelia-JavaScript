@@ -13,7 +13,7 @@ AJS.register('Library.Validator', function() {
      * Available options are:
      * ======================
      * $form            -- array  jQuery Reference to the form we wanna check.
-     * [MessageLibrary] -- object If you wanna to display message when the 
+     * [MessageLibrary] -- object If you wanna to display message when the
      *                            field validation fails.
      */
     var Validator = function(options) {
@@ -90,12 +90,12 @@ AJS.register('Library.Validator', function() {
 
             // Rule equals -----------------------------------------------------
             if (rule.equals) {
-                var rule_equals_val = 
+                var rule_equals_val =
                     typeof this.opt.$form.find(rule.equals)['val'] !== 'undefined'
                         ? this.opt.$form.find(rule.equals)['val']()
                         : false;
 
-                if (rule_equals_val === false || 
+                if (rule_equals_val === false ||
                         field.val() !== rule_equals_val) {
                     this.opt.MessageLibrary.warn(rule.message);
                     this.valid = false;

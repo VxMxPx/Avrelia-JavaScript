@@ -77,4 +77,6 @@ AJS.register('Library.Response', function() {
 
     };
 
+    return Response;
+
 });
