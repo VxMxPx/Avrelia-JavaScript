@@ -55,11 +55,6 @@
                 position = 1,
                 current  = _public;
 
-            // Set autorun
-            if (typeof autorun === 'undefined') {
-                autorun = true;
-            }
-
             // We need to have more than one segment!
             if (segments.length < 2) {
                 
@@ -103,6 +98,21 @@
                 return false;
             }
             else {
+                // Try to see if we should autorun this
+                if (typeof autorun === 'undefined') {
+                    if (segments[0] === 'Controller') {
+                        if (_public.Library.Config.get('auto_init_controllers', true)) {
+                            autorun = true;
+                        }
+                        else {
+                            autorun = false;
+                        }
+                    }
+                    else {
+                        autorun = true;
+                    }
+                }
+
                 current[segments[position]] = autorun ? exe_class() : exe_class;
             }
         };
