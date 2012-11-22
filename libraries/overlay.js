@@ -97,6 +97,12 @@ AJS.register('Library.Overlay', function() {
 
             var _this = this;
 
+            // Check if parent is visible at all... If it isn't then we won't
+            // show overlay either
+            if (this.opt.$parent && !this.opt.$parent.is(':visible')) {
+                return false;
+            }
+
             if (this.is_visible) { return false; }
 
             if (this.opt.$parent) {
