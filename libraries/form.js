@@ -28,6 +28,64 @@ AJS.register('Library.Form', function() {
         constructor: Form,
 
         /**
+         * Will reset the form - set all fields to be default.
+         * NOTE: This will set fields to their default values as set in HTML,
+         * if you want to empty the form, use do_empty instead.
+         * --
+         * @return {object} this
+         */
+        do_reset : function() {
+
+            // Probably not, worth trying though.
+            if (typeof this.opt.$form['reset'] === 'function') {
+                this.opt.$form.reset();
+                return this;
+            }
+
+            // Probably yes!
+            if (typeof this.opt.$form[0]['reset'] === 'function') {
+                this.opt.$form[0].reset();
+                return this;
+            }
+
+            // None of them, throw some error
+            Lib.Log.war('Seems form has no method reset(), can\'t proceed.');
+            return this;
+        },
+
+        /**
+         * Will empty the form - set all fields to be empty, un-checked, etc...
+         * NOTE: This will NOT restore the default values, but actually set all
+         * values to be empty. If you want to reset form, use do_reset instead.
+         * --
+         * @return {object} this
+         */
+        do_empty : function() {
+
+            var fields = this.get_fields_raw();
+
+            if (fields.length) {
+
+                for (var i = fields.length - 1; i >= 0; i--) {
+                    var $field = fields[i].field;
+
+                    // We must check the type and reset appropriately 
+                    if ($field.attr('checked')) {
+                        $field.removeAttr('checked');
+                    }
+                    else if ($field.attr('selected')) {
+                        $field.removeAttr('selected');
+                    }
+                    else if (typeof $field['val'] !== 'undefined') {
+                        $field.val('');
+                    }
+                };
+            }
+
+            return this;
+        },
+
+        /**
          * Append new (jQuery) form field to the rest. This is useful if we wanna
          * use external form's fields.
          * --
@@ -48,7 +106,7 @@ AJS.register('Library.Form', function() {
          */
         refresh_fields: function() {
 
-            var fields = this.opt.$form.find('input, textarea, select'),
+            var fields = this.opt.$form.find('input:not([type=reset], [type=submit]), textarea, select'),
                 ignore = this.opt.ignore;
 
             if (ignore.length > 0) {
