@@ -21,6 +21,8 @@ AJS.register('Library.Overlay', function() {
      *                                 Leave it empty for full screen overlay.
      * - padding   : integer           Overlay padding when displayed. Only if
      *                                 you provided parent element.
+     *                                 NOTE: Padding is applied only when using
+     *                                 parent for positioning.
      * - can_close : boolean           If true, click on overlay will hide it.
      * - on_click  : function          Callback for when overlay is clicked.
      * - id        : string            Specific ID.
@@ -92,8 +94,17 @@ AJS.register('Library.Overlay', function() {
 
         /**
          * Simply so, display the overlay, if not already visible.
+         * --
+         * @param {object} geometry You can specify where exactly to show overlay,
+         *                          if not, the parent's position will be used,
+         *                          or nothing will be set (u can set it in css).
+         *                          NOTE: Padding won't be applied to geometry.
+         * - top    : integer
+         * - left   : integer
+         * - width  : integer
+         * - height : integer
          */
-        show: function() {
+        show: function(geometry) {
 
             var _this = this;
 
@@ -103,22 +114,28 @@ AJS.register('Library.Overlay', function() {
                 return false;
             }
 
+            // If is already visible we won't display it again
             if (this.is_visible) { return false; }
 
-            if (this.opt.$parent) {
-                var parent = {
-                    top:     this.opt.$parent.offset().top,
-                    left:    this.opt.$parent.offset().left,
-                    width:   this.opt.$parent.outerWidth(),
-                    height:  this.opt.$parent.outerHeight()
+            // If geometry wasn't set, and we do have parent,
+            // we'll use parent to set geometry.
+            if (!geometry && this.opt.$parent) {
+                geometry = {
+                    top:     this.opt.$parent.offset().top - _this.opt.padding,
+                    left:    this.opt.$parent.offset().left - _this.opt.padding,
+                    width:   this.opt.$parent.outerWidth() + (_this.opt.padding * 2),
+                    height:  this.opt.$parent.outerHeight() + (_this.opt.padding * 2)
                 };
+            }
 
+            // If we have geometry, either set by parent or pass in, we'll use it
+            if (typeof geometry === 'object') {
                 this.$overlay.css({
                     display  : 'none',
-                    top      : parent.top - _this.opt.padding,
-                    left     : parent.left - _this.opt.padding,
-                    width    : parent.width + (_this.opt.padding * 2),
-                    height   : parent.height + (_this.opt.padding * 2),
+                    top      : geometry.top,
+                    left     : geometry.left,
+                    width    : geometry.width,
+                    height   : geometry.height,
                     position : 'absolute'
                 });
             }

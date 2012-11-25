@@ -56,7 +56,7 @@ AJS.register('Library.Response', function() {
                 // Do we have redirect?
                 if (typeof response.redirect === 'string') {
                     if (!response.redirect.match(/:\/\//)) {
-                        response.redirect = url(response.redirect);
+                        response.redirect = AJS.url(response.redirect);
                     }
 
                     // Here we go ...

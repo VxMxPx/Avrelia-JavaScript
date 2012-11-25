@@ -17,7 +17,7 @@ AJS.register('Library.Request', function() {
      *
      * Available options are:
      * ======================
-     * url               -- string  A url to which request should be made. 
+     * url               -- string  A url to which request should be made.
      *                              This can be full url, or only segment(s).
      *                              If only segments, then full url will be
      *                              created using Lib.Config.get('base_url')
@@ -39,7 +39,7 @@ AJS.register('Library.Request', function() {
         // If that's true, then just set the url as it is.
         // If not, then call url() function, and pass in the url, to generate
         // full absolute url.
-        this.opt.url = this.opt.url.match(/:\/\//) ? this.opt.url : url(this.opt.url);
+        this.opt.url = this.opt.url.match(/:\/\//) ? this.opt.url : AJS.url(this.opt.url);
 
         // Is any request in progress right now?
         this.in_progress = 0;
@@ -69,7 +69,7 @@ AJS.register('Library.Request', function() {
                     // We have multiple libraries
                     for (var i = this.opt.OverlayLibrary.length - 1; i >= 0; i--) {
                         this.opt.OverlayLibrary[i].show();
-                    };
+                    }
                 }
                 else {
                     this.opt.OverlayLibrary.show();
@@ -88,7 +88,7 @@ AJS.register('Library.Request', function() {
                     // We have multiple libraries
                     for (var i = this.opt.OverlayLibrary.length - 1; i >= 0; i--) {
                         this.opt.OverlayLibrary[i].hide();
-                    };
+                    }
                 }
                 else {
                     this.opt.OverlayLibrary.hide();
@@ -116,8 +116,8 @@ AJS.register('Library.Request', function() {
 
                     if (segments.length) {
 
-                        full_url = full_url + 
-                            (this.appended.match(/\?/) ? '&' : '?') + 
+                        full_url = full_url +
+                            (this.appended.match(/\?/) ? '&' : '?') +
                             segments.join('?');
                     }
                 }
@@ -195,7 +195,7 @@ AJS.register('Library.Request', function() {
             if (this.opt.ResponseLibrary) {
 
                 return this.opt.ResponseLibrary.handle(jqXHR, textStatus);
-            } 
+            }
             else {
                 
                 return jqXHR;
