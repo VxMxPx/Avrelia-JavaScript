@@ -1,6 +1,6 @@
 ;(function($) {
 
-    // Define ticket friend name-space
+    // Define AJS name-space
     var AJS = (function() {
 
             // Public methods
