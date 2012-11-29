@@ -8,17 +8,23 @@ AJS requires following libraries / frameworks to work:
 - Twitter Bootstrap
 
 The AJS Framework is structured similar the the example bellow:
-+ controllers/
-+ libraries/
-    log.js
-    ...
-map.json
-ajs.js
+
+    + controllers/
+    + libraries/
+        log.js
+        ...
+    + models/
+    map.json
+    map.inc.json
+    ajs.js
+    routes.js
 
 Adding New Files
 ----------------
 
-As we add a new file (most likely we'll be adding controllers), we must add reference for it, to the map.json file. Additional to that, each controller, library and model must be registered in the AJS namespace. We don't want any code in the global space.
+As we add a new file (most likely we'll be adding controllers), we must add reference for it, to the map.inc.json file. Additional to that, each controller, library and model must be registered in the AJS namespace. We don't want any code in the global space.
+
+NOTE: Please don't change generic ```map.json```, instead use ```map.inc.json``` to add your files.
 
 First thing we need to do is to call AJS.register method and pass in the name of the controller or the library we want to register. This follows the directory structure itself; the only two differences are, that individual segments are capitalized (and camel-cased for multiple words) and that first word is in singular form, so instead of controllers we have Controller, and instead of libraries we have Library. Lets see how this is done for the events/index.js controller.
 
@@ -97,6 +103,13 @@ Config is provided thought ```window.AJS_Config```, in following format:
     {
         'key' : 'Value'
     }
+
+Following options are currently supported by the framework itself:
+
+    base_url                string  Define web-site's default URL like: http://domain.tld
+    is_debug                boolean If true, Log messages will be send to the console
+    auto_init_controllers   boolean If true, all controllers will be automatically executed.
+                                    Set this to false, if you're using routes.js
 
 #### mixed AJS.Library.Config.get( string key, mixed default_value )
 
