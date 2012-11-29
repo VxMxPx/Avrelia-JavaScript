@@ -1,0 +1,20 @@
+[
+    "ajs.js",
+    "functions.js",
+    
+    "libraries/config.js",
+    "libraries/form.js",
+    "libraries/language.js",
+    "libraries/log.js",
+    "libraries/message.js",
+    "libraries/overlay.js",
+    "libraries/popover.js",
+    "libraries/request.js",
+    "libraries/response.js",
+    "libraries/uri.js",
+    "libraries/validator.js",
+
+    "@include map.inc.json",
+
+    "routes.js"
+]
