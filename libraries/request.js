@@ -146,6 +146,7 @@ AJS.register('Library.Request', function() {
 
             // If we allow only one, then return current if anything is in progress
             if (this.in_progress > 1 && this.opt.limit === 'first') {
+                Lib.Log.info('Lib.Request; We allow only first request, quiting.');
                 return this.current_request;
             }
 
@@ -188,6 +189,8 @@ AJS.register('Library.Request', function() {
 
             this.in_progress = this.in_progress-1;
 
+            Lib.Log.info('Lib.Request; Done, left: ' + this.in_progress);
+
             if (this.in_progress === 0) {
                 this._hide_overlays();
             }
@@ -208,10 +211,12 @@ AJS.register('Library.Request', function() {
          * --
          * @param  {string} uri Example 'filter.json?order=desc'
          * --
-         * @return {void}
+         * @return {object}
          */
         append_uri: function(uri) {
+            
             this.appended = uri;
+            return this;
         },
 
         /**

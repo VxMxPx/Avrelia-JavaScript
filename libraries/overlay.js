@@ -1,7 +1,8 @@
 AJS.register('Library.Overlay', function() {
 
     // Number of initialized overlays, used to generate unique IDs
-    var count    = 0,
+    var Lib      = AJS.Library,
+        count    = 0,
         defaults = {
             loading   : false,
             $parent   : false,
@@ -65,7 +66,8 @@ AJS.register('Library.Overlay', function() {
         }
 
         // If current overlay visible
-        this.is_visible = false;
+        this.is_visible  = false;
+        this.is_appended = false;
 
         // Increase count of initialized objects by one
         count = count + 1;
@@ -111,11 +113,15 @@ AJS.register('Library.Overlay', function() {
             // Check if parent is visible at all... If it isn't then we won't
             // show overlay either
             if (this.opt.$parent && !this.opt.$parent.is(':visible')) {
+                Lib.Log.info('Lib.Overlay; Parent is not visible, won\'t display overlay.');
                 return false;
             }
 
             // If is already visible we won't display it again
-            if (this.is_visible) { return false; }
+            if (this.is_visible) { 
+                Lib.Log.info('Lib.Overlay; I\'m already visible! Quting.');
+                return false; 
+            }
 
             // If geometry wasn't set, and we do have parent,
             // we'll use parent to set geometry.
@@ -155,8 +161,12 @@ AJS.register('Library.Overlay', function() {
 
             this.is_visible = true;
 
-            this.$overlay.appendTo('body');
-            this.$overlay.fadeIn('fast');
+            if (!this.is_appended) {
+                this.$overlay.appendTo('body');
+                this.is_appended = true;
+            }
+
+            this.$overlay.stop().fadeIn('fast');
         },
 
         /**
@@ -167,9 +177,7 @@ AJS.register('Library.Overlay', function() {
 
             this.is_visible = false;
 
-            this.$overlay.fadeOut('fast', function() {
-                _this.$overlay.remove();
-            });
+            this.$overlay.stop().fadeOut('fast');
         }
     };
 
