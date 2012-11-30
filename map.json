@@ -11,7 +11,7 @@
     "libraries/popover.js",
     "libraries/request.js",
     "libraries/response.js",
-    "libraries/uri.js",
+    "libraries/uri_hash.js",
     "libraries/validator.js",
 
     "@include map.inc.json",

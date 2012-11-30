@@ -90,9 +90,9 @@ Shortcut for ```AJS.Library.Language.translate()```
 
 Using ```AJS.Library.Config.get('base_url')``` to get full url.
 
-#### object AJS.Library.<Library Name>
-#### object AJS.Controller.<Controller Name>
-#### object AJS.Model.<Model Name>
+#### object AJS.Library.&lt;Library Name&gt;
+#### object AJS.Controller.&lt;Controller Name&gt;
+#### object AJS.Model.&lt;Model Name&gt;
 
 --------------------------------------------------------------------------------
 
