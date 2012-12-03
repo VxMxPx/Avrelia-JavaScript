@@ -1,17 +1,7 @@
 AJS.register('Library.Message', function() {
 
-    var defaults = {
-            $wrapper        : false,
-            can_close       : true,
-            group           : true,
-            autohide        : false,
-            animation_speed : false,
-            in_animation    : false,
-            out_animation   : false
-        },
-
         // Single message item template
-        template = ['<div><div class="alert">',
+    var template = ['<div><div class="alert">',
                        '<button type="button" class="close" data-dismiss="alert">×</button>',
                    '</div></div>'].join(''),
 
@@ -42,7 +32,15 @@ AJS.register('Library.Message', function() {
      */
     var Message = function(options) {
 
-        this.opt = $.extend({}, defaults, options);
+        this.opt = $.extend({}, {
+            $wrapper        : false,
+            can_close       : true,
+            group           : true,
+            autohide        : false,
+            animation_speed : false,
+            in_animation    : false,
+            out_animation   : false
+        }, options);
 
         this.messages_list = {
             'warn'   : [],

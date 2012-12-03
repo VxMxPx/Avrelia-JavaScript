@@ -9,19 +9,6 @@ AJS.register('Library.Popover', function() {
                     '</div>','</div>'].join('');
 
     var Log = AJS.Library.Log;
-
-    var defaults = {
-        can_close : true,
-        placement : 'top',
-        title     : null,
-        body      : null,
-        OverlayLibrary : false,
-        id        : null,
-        classes   : null,
-        on_close  : false,
-        on_show   : false
-    };
-
     /**
      * Construct an Popover element.
      * @param {object} options Following options are available:
@@ -45,7 +32,17 @@ AJS.register('Library.Popover', function() {
      */
     var Popover = function(options) {
 
-        this.opt      = $.extend({}, defaults, options);
+        this.opt = $.extend({}, {
+            can_close : true,
+            placement : 'top',
+            title     : null,
+            body      : null,
+            OverlayLibrary : false,
+            id        : null,
+            classes   : null,
+            on_close  : false,
+            on_show   : false
+        }, options);
 
         // This is actual popover element
         this.$element = $(template);

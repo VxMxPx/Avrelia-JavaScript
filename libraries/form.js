@@ -1,13 +1,6 @@
 AJS.register('Library.Form', function() {
 
-    var Lib = AJS.Library,
-        defaults = {
-            $form    : false,
-            ignore   : [],
-            fields   : [],
-            defaults : [],
-            append   : []
-        };
+    var Lib = AJS.Library;
 
     /**
      * Form library
@@ -20,7 +13,14 @@ AJS.register('Library.Form', function() {
      *                       of the form fields.
      */
     var Form = function(options) {
-        this.opt = $.extend({}, defaults, options);
+
+        this.opt = $.extend({}, {
+            $form    : false,
+            ignore   : [],
+            fields   : [],
+            defaults : [],
+            append   : []
+        }, options);
     };
 
     Form.prototype = {

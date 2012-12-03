@@ -1,9 +1,6 @@
 AJS.register('Library.Response', function() {
 
-    var Lib      = AJS.Library,
-        defaults = {
-            MessageLibrary  : false
-        };
+    var Lib = AJS.Library;
 
     /**
      * Response library is used to handle response from the server, and will
@@ -26,7 +23,9 @@ AJS.register('Library.Response', function() {
      *                       for any reason.
      */
     var Response = function(options) {
-        this.opt = $.extend({}, defaults, options);
+        this.opt = $.extend({}, {
+            MessageLibrary  : false
+        }, options);
     };
 
     Response.prototype = {

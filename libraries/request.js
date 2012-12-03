@@ -1,13 +1,6 @@
 AJS.register('Library.Request', function() {
 
-    var Lib      = AJS.Library,
-        defaults = {
-            url             : '',
-            OverlayLibrary  : false,
-            ResponseLibrary : false,
-            type            : 'json',
-            limit           : 'last'
-        };
+    var Lib      = AJS.Library;
 
     /**
      * Request library is used to handle request to server,
@@ -32,7 +25,13 @@ AJS.register('Library.Request', function() {
      */
     var Request = function(options) {
 
-        this.opt = $.extend({}, defaults, options);
+        this.opt = $.extend({}, {
+            url             : '',
+            OverlayLibrary  : false,
+            ResponseLibrary : false,
+            type            : 'json',
+            limit           : 'last'
+        }, options);
 
         // Check if url contains :// if it does then assume that full url was
         // provided - something like http://google.com or https://google.com;

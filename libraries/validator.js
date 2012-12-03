@@ -1,10 +1,5 @@
 AJS.register('Library.Validator', function() {
 
-    var defaults = {
-        $form          : false,
-        MessageLibrary : false
-    };
-
     /**
      * Validator allow us to easily check values of various form fields.
      * --
@@ -18,7 +13,11 @@ AJS.register('Library.Validator', function() {
      */
     var Validator = function(options) {
 
-        this.opt    = $.extend({}, defaults, options);
+        this.opt    = $.extend({}, {
+            $form          : false,
+            MessageLibrary : false
+        }, options);
+        
         this.valid  = true;
         this.fields = [];
     };

@@ -2,17 +2,7 @@ AJS.register('Library.Overlay', function() {
 
     // Number of initialized overlays, used to generate unique IDs
     var Lib      = AJS.Library,
-        count    = 0,
-        defaults = {
-            loading   : false,
-            $parent   : false,
-            text      : null,
-            padding   : 0,
-            can_close : false,
-            on_click  : false,
-            id        : null,
-            classes   : []
-        };
+        count    = 0;
 
     /**
      * Construct overlay object - use: o = new Lib.Overlay();
@@ -29,10 +19,19 @@ AJS.register('Library.Overlay', function() {
      * - id        : string            Specific ID.
      * - classes   : array             Specific classes.
      */
-    var Overlay = function(options) {
+    function Overlay(options) {
 
         // General options
-        this.opt = $.extend({}, defaults, options);
+        this.opt = $.extend({}, {
+            loading   : false,
+            $parent   : false,
+            text      : null,
+            padding   : 0,
+            can_close : false,
+            on_click  : false,
+            id        : null,
+            classes   : []
+        } , options);
 
         // Create overlay element from template
         this.$overlay        = $('<div class=overlay />');
@@ -74,6 +73,8 @@ AJS.register('Library.Overlay', function() {
     };
 
     Overlay.prototype = {
+
+        constructor : Overlay,
 
         /**
          * Overlay click callback. Must be function. Set to false to unset.
