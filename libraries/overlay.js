@@ -10,7 +10,7 @@ AJS.register('Library.Overlay', function() {
             padding   : 0,
             can_close : false,
             on_click  : false,
-            id        : count,
+            id        : null,
             classes   : []
         };
 
@@ -54,8 +54,8 @@ AJS.register('Library.Overlay', function() {
 
         // If we have id which is completely the same as count, then we'll
         // prepend something, so that  it won't be just a number.
-        if (this.opt.id === count) {
-            this.opt.id = 'ajs_overlay_' + this.opt.id;
+        if (!this.opt.id) {
+            this.opt.id = 'ajs_overlay_' + count;
         }
         
         // Set unique ID and classes to the element
@@ -74,8 +74,6 @@ AJS.register('Library.Overlay', function() {
     };
 
     Overlay.prototype = {
-
-        constructor: Overlay,
 
         /**
          * Overlay click callback. Must be function. Set to false to unset.
@@ -118,9 +116,9 @@ AJS.register('Library.Overlay', function() {
             }
 
             // If is already visible we won't display it again
-            if (this.is_visible) { 
+            if (this.is_visible) {
                 Lib.Log.info('Lib.Overlay; I\'m already visible! Quting.');
-                return false; 
+                return false;
             }
 
             // If geometry wasn't set, and we do have parent,
