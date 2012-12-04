@@ -70,7 +70,7 @@ AJS.register('Library.Overlay', function() {
 
         // Increase count of initialized objects by one
         count = count + 1;
-    };
+    }
 
     Overlay.prototype = {
 
@@ -165,18 +165,16 @@ AJS.register('Library.Overlay', function() {
                 this.is_appended = true;
             }
 
-            this.$overlay.stop().fadeIn('fast');
+            this.$overlay.stop(true, true).fadeIn('fast');
         },
 
         /**
          * Simply so, hide - destroy the overlay
          */
         hide: function() {
-            var _this = this;
 
             this.is_visible = false;
-
-            this.$overlay.stop().fadeOut('fast');
+            this.$overlay.stop(true, true).fadeOut('fast');
         }
     };
 
