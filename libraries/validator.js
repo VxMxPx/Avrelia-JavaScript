@@ -49,6 +49,7 @@ AJS.register('Library.Validator', function() {
                 }
             }
 
+
             this.fields = [];
         },
 

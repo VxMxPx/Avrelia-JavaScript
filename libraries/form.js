@@ -207,7 +207,25 @@ AJS.register('Library.Form', function() {
             }
 
             return result;
+        },
+
+        /**
+         * Get fields in serialized format, example:
+         * name=Some+name&description=Some+Description
+         * 
+         * @return {string}
+         */
+        get_serialized: function() {
+            var fields_length = this.opt.fields.length;
+
+            if (!fields_length) {
+                this.refresh_fields();
+                fields_length = this.opt.fields.length;
+            }
+
+            return fields_length > 0 ? this.opt.fields.serialize() : '';
         }
+
     };
 
     return Form;
