@@ -67,6 +67,7 @@ AJS.register('Library.Overlay', function() {
         // If current overlay visible
         this.is_visible  = false;
         this.is_appended = false;
+        this.is_freezed  = false;
 
         // Increase count of initialized objects by one
         count = count + 1;
@@ -90,6 +91,28 @@ AJS.register('Library.Overlay', function() {
                 this.$overlay.unbind('click.callback');
             }
 
+            return this;
+        },
+
+        /**
+         * Won't allow to hide overlay until unfreezed.
+         * --
+         * @return {object} this
+         */
+        freeze : function() {
+            
+            this.is_freezed = true;
+            return this;
+        },
+
+        /**
+         * Allow overly to be hidden again.
+         * --
+         * @return {object} this
+         */
+        unfreeze : function() {
+
+            this.is_freezed = false;
             return this;
         },
 
@@ -172,6 +195,12 @@ AJS.register('Library.Overlay', function() {
          * Simply so, hide - destroy the overlay
          */
         hide: function() {
+
+            if (this.is_freezed) {
+
+                Lib.Log.info('Lib.Overlay; Overley is freezed, won\'t hide it until unfreezed.');
+                return;
+            }
 
             this.is_visible = false;
             this.$overlay.stop(true, true).fadeOut('fast');
