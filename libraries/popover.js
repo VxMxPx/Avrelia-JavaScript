@@ -83,6 +83,8 @@ AJS.register('Library.Popover', function() {
             this.opt.placement = placement;
         }
 
+        this.$element.on('click', '.btn-close', $.proxy(this.hide, this));
+
         this.is_visible  = false;
         this.is_blocked  = false;
         this.is_appended = false;
@@ -358,7 +360,12 @@ AJS.register('Library.Popover', function() {
          * --
          * @return {void}
          */
-        hide : function() {
+        hide : function(evnt) {
+
+            if (typeof evnt !== 'undefined' && typeof evnt.preventDefault !== 'undefined') {
+                evnt.preventDefault();
+            }
+
             this.is_visible = false;
             this.$element.hide();
             this.opt.on_hide();
