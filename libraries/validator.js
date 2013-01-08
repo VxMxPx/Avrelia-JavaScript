@@ -91,9 +91,9 @@ AJS.register('Library.Validator', function() {
             // Rule equals -----------------------------------------------------
             if (rule.equals) {
                 var rule_equals_val =
-                    typeof this.opt.$form.find(rule.equals)['val'] !== 'undefined'
-                        ? this.opt.$form.find(rule.equals)['val']()
-                        : false;
+                    typeof this.opt.$form.find(rule.equals)['val'] !== 'undefined' ?
+                        this.opt.$form.find(rule.equals)['val']() :
+                        false;
 
                 if (rule_equals_val === false ||
                         field.val() !== rule_equals_val) {

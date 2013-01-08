@@ -90,7 +90,7 @@ AJS.register('Library.UriHash', function() {
                         return segments[i].val;
                     }
                 }
-            };
+            }
         }
 
         return false;

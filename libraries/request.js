@@ -102,8 +102,8 @@ AJS.register('Library.Request', function() {
          * @return {string}
          */
         _resolve_url : function() {
-            var full_url = this.opt.url;
 
+            var full_url = this.opt.url;
 
             if (this.appended) {
 

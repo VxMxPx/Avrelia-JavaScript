@@ -14,9 +14,9 @@ AJS.register('Library.Log', function() {
     function _add(type, message) {
         // If we have console and debug mode is enabled,
         // we'll dump info out to it.
-        if (typeof console !== 'undefined' 
-                && typeof console[type] !== 'undefined'
-                && AJS.Library.Config.get('is_debug')) {
+        if (typeof console !== 'undefined' &&
+            typeof console[type] !== 'undefined' &&
+            AJS.Library.Config.get('is_debug')) {
             console[type](message);
         }
 
@@ -25,23 +25,23 @@ AJS.register('Library.Log', function() {
 
     _public.info = function(message) {
         _add('info', message);
-    }
+    };
 
     _public.warn = function(message) {
         _add('warn', message);
-    }
+    };
 
     _public.error = function(message) {
         _add('error', message);
-    }
+    };
 
     _public.debug = function(message) {
         _add('debug', message);
-    }
+    };
 
     _public.log = function(message) {
         _add('log', message);
-    }
+    };
 
     return _public;
 

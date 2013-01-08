@@ -69,7 +69,7 @@ AJS.register('Library.Form', function() {
                 for (var i = fields.length - 1; i >= 0; i--) {
                     var $field = fields[i].field;
 
-                    // We must check the type and reset appropriately 
+                    // We must check the type and reset appropriately
                     if ($field.attr('checked')) {
                         $field.removeAttr('checked');
                     }
@@ -79,7 +79,7 @@ AJS.register('Library.Form', function() {
                     else if (typeof $field['val'] !== 'undefined') {
                         $field.val('');
                     }
-                };
+                }
             }
 
             return this;
@@ -127,7 +127,7 @@ AJS.register('Library.Form', function() {
             if (this.opt.append.length > 0) {
                 for (var i = this.opt.append.length - 1; i >= 0; i--) {
                     fields.push(this.opt.append[i]);
-                };
+                }
             }
 
             this.opt.fields = fields;
@@ -212,7 +212,7 @@ AJS.register('Library.Form', function() {
         /**
          * Get fields in serialized format, example:
          * name=Some+name&description=Some+Description
-         * 
+         *
          * @return {string}
          */
         get_serialized: function() {
