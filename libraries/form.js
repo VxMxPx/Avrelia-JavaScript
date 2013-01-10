@@ -6,7 +6,7 @@ AJS.register('Library.Form', function() {
      * Form library
      * --
      * @param {object} options Following options are available:
-     * - form       : object jQuery reference
+     * - $form      : object jQuery reference
      * - [ignore]   : array  An array of fields which should be ignored.
      * - [defaults] : array  Default value for when field has no value.
      * - [append]   : array  List of fields which we want to append to the rest
@@ -95,6 +95,37 @@ AJS.register('Library.Form', function() {
         append_field: function($field) {
             this.opt.append.push($field);
             this.opt.fields.push($field);
+            return this;
+        },
+
+        /**
+         * Will fill in the form's fields, select apropriate checkboxes, etc...
+         * --
+         * @param  {object} data
+         * --
+         * @return {object} this
+         */
+        fill: function(data) {
+
+            var field = null,
+                that  = this;
+
+            $.each(data, function(index, value) {
+
+                // Radio, Checkbox ---------------------------------------------
+                field = that.opt.$form.find('input[name=' + index + '][type=radio], input[name=' + index + '][type=checkbox]');
+
+                if (field.length > 0) {
+                    field.attr('checked', false);
+                    field.filter('[value="' + value + '"]').attr('checked', true);
+                    return;
+                }
+
+                // Textbox, Textarea -------------------------------------------
+                field = that.opt.$form.find('input[name=' + index + '], textarea[name=' + index + ']');
+                field.val(value);
+            });
+
             return this;
         },
 
