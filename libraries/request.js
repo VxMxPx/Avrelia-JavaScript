@@ -57,6 +57,11 @@ AJS.register('Library.Request', function() {
 
         constructor: Request,
 
+        /**
+         * Will show all overlays.
+         * --
+         * @return {void}
+         */
         _show_overlays : function() {
 
             // Check if we have any overlay at all...
@@ -76,6 +81,11 @@ AJS.register('Library.Request', function() {
             }
         },
 
+        /**
+         * Will hide all overlays, if any provided.
+         * --
+         * @return {void}
+         */
         _hide_overlays : function() {
 
             // Check if we have any overlay at all...
@@ -136,6 +146,15 @@ AJS.register('Library.Request', function() {
             return full_url;
         },
 
+        /**
+         * Helper method, to actually make a request, - this is used by do_get,
+         * do_post, do_put, do_delete.
+         * --
+         * @param  {string} type post | get | delete | put
+         * @param  {object} data Optional, object
+         * --
+         * @return {object} jQuery AJAX
+         */
         _make_request: function(type, data) {
 
             data = data || null;
@@ -181,6 +200,11 @@ AJS.register('Library.Request', function() {
          * When particular request finishes we'll trigger this, -
          * it will decrease in progress counter and hide overlay if needed + it
          * will set messages, etc...
+         * --
+         * @param  {object} jqXHR
+         * @param  {object} textStatus
+         * --
+         * @return {mixed} jqXHR | Response Library's response (oO)
          */
         _on_complete: function(jqXHR, textStatus) {
             
@@ -208,7 +232,7 @@ AJS.register('Library.Request', function() {
          * --
          * @param  {string} uri Example 'filter.json?order=desc'
          * --
-         * @return {object}
+         * @return {object} this
          */
         append_uri: function(uri) {
 
@@ -218,6 +242,8 @@ AJS.register('Library.Request', function() {
 
         /**
          * Will cancel all request currently in progress.
+         * --
+         * @return {object} this
          */
         cancel_all: function()
         {
@@ -231,16 +257,37 @@ AJS.register('Library.Request', function() {
             return this;
         },
 
+        /**
+         * Make a POST request.
+         * --
+         * @param  {object} data
+         * --
+         * @return {object} jQuery AJAX
+         */
         do_post: function(data) {
             data = typeof data === 'object' ? data : {};
             return this._make_request('post', data);
         },
 
+        /**
+         * Make a GET request.
+         * --
+         * @param  {object} data
+         * --
+         * @return {object} jQuery AJAX
+         */
         do_get: function(data) {
             data = typeof data === 'object' ? data : {};
             return this._make_request('get', data);
         },
 
+        /**
+         * Make a PUT request.
+         * --
+         * @param  {object} data
+         * --
+         * @return {object} jQuery AJAX
+         */
         do_put: function(data) {
             data = typeof data === 'object' ? data : {};
 
@@ -248,6 +295,13 @@ AJS.register('Library.Request', function() {
             return this._make_request('post', data);
         },
 
+        /**
+         * Make a DELETE request.
+         * --
+         * @param  {object} data
+         * --
+         * @return {object} jQuery AJAX
+         */
         do_delete: function(data) {
             data = typeof data === 'object' ? data : {};
 

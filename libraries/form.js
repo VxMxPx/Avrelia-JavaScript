@@ -90,6 +90,7 @@ AJS.register('Library.Form', function() {
          * use external form's fields.
          * --
          * @param  {object} $field jQuery selected form field.
+         * --
          * @return {object} this
          */
         append_field: function($field) {
@@ -133,6 +134,7 @@ AJS.register('Library.Form', function() {
          * Useful if we add / remove some fields in since last form request.
          * In first submit or after ignore_fields modification fields will be
          * auto refresh.
+         * --
          * @return {object} this
          */
         refresh_fields: function() {
@@ -168,6 +170,7 @@ AJS.register('Library.Form', function() {
 
         /**
          * Return list of fields
+         * --
          * @return {array} List of all fields in following format:
          *                 [
          *                     {name:'name', value:'value', field:$jquery_ref},
@@ -190,6 +193,7 @@ AJS.register('Library.Form', function() {
          * Get fields in format which can be posted, example:
          * {key: value, another: value: third: [array, values, in]}
          * In case of check-boxes, etc.. will return only checked items.
+         * --
          * @return {object}
          */
         get_fields_post: function() {
@@ -243,7 +247,7 @@ AJS.register('Library.Form', function() {
         /**
          * Get fields in serialized format, example:
          * name=Some+name&description=Some+Description
-         *
+         * --
          * @return {string}
          */
         get_serialized: function() {

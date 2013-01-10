@@ -97,6 +97,19 @@ AJS.register('Library.UriHash', function() {
     };
 
     /**
+     * Will check if particular segment is set.
+     * --
+     * @param  {mixed}  segment Either integer, segment index, or string, get-key.
+     * --
+     * @return {boolean}
+     */
+    _public.has = function(segment) {
+
+        // Grab result and cast it as boolean
+        return !!_public.get(segment);
+    };
+
+    /**
      * Change URI, either by appending or replacing segments.
      * --
      * @param {mixed}  segment Either integer: segment index, or string: get-key,

@@ -5,11 +5,13 @@ AJS.register('Library.Log', function() {
         storage = { info:[], warn:[], error:[], debug:[], log:[] };
 
     /**
-     * Add the log message internally. If debug then message
-     * will be dump to console (if available).
+     * Add the log message internally. If in debug mode (provided through
+     * configuration) then message will be dump to console (if available).
      * --
-     * @param {string} type
-     * @param {mixed}  message
+     * @param  {string} type
+     * @param  {mixed}  message
+     * --
+     * @return {void}
      */
     function _add(type, message) {
         // If we have console and debug mode is enabled,
@@ -23,22 +25,57 @@ AJS.register('Library.Log', function() {
         storage[type].push(message);
     }
 
+    /**
+     * Add an information.
+     * --
+     * @param  {mixed} message
+     * --
+     * @return {void}
+     */
     _public.info = function(message) {
         _add('info', message);
     };
 
+    /**
+     * Add a warning.
+     * --
+     * @param  {mixed} message
+     * --
+     * @return {void}
+     */
     _public.warn = function(message) {
         _add('warn', message);
     };
 
+    /**
+     * Add an error.
+     * --
+     * @param  {mixed} message
+     * --
+     * @return {void}
+     */
     _public.error = function(message) {
         _add('error', message);
     };
 
+    /**
+     * Add a debug.
+     * --
+     * @param  {mixed} message
+     * --
+     * @return {void}
+     */
     _public.debug = function(message) {
         _add('debug', message);
     };
 
+    /**
+     * Add a log.
+     * --
+     * @param  {mixed} message
+     * --
+     * @return {void}
+     */
     _public.log = function(message) {
         _add('log', message);
     };

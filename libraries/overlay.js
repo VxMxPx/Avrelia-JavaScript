@@ -80,6 +80,7 @@ AJS.register('Library.Overlay', function() {
         /**
          * Overlay click callback. Must be function. Set to false to unset.
          * @param  {Mixed}  callback Function or false.
+         * --
          * @return {Object} this
          */
         click_callback: function(callback) {
@@ -119,7 +120,7 @@ AJS.register('Library.Overlay', function() {
         /**
          * Simply so, display the overlay, if not already visible.
          * --
-         * @param {object} geometry You can specify where exactly to show overlay,
+         * @param  {object} geometry You can specify where exactly to show overlay,
          *                          if not, the parent's position will be used,
          *                          or nothing will be set (u can set it in css).
          *                          NOTE: Padding won't be applied to geometry.
@@ -127,6 +128,8 @@ AJS.register('Library.Overlay', function() {
          * - left   : integer
          * - width  : integer
          * - height : integer
+         * --
+         * @return {void}
          */
         show: function(geometry) {
 
@@ -192,7 +195,9 @@ AJS.register('Library.Overlay', function() {
         },
 
         /**
-         * Simply so, hide - destroy the overlay
+         * Simply so, hide the overlay.
+         * --
+         * @return {void}
          */
         hide: function() {
 

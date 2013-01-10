@@ -21,7 +21,13 @@ AJS.url = function(uri) {
 };
 
 /**
- * Translate string.
+ * Translate particular string, shortcut for methos: AJS.Library.Language.translate
+ * Languages are provided thought window.AJS_Dictionary, in following format:
+ * {
+ *     'KEY' : 'Value'
+ * }
+ *
+ * Further informations: https://github.com/VxMxPx/Avrelia-Framework/wiki/Languages
  * --
  * @param  {string} key
  * @param  {array}  params

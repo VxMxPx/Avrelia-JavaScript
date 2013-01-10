@@ -56,7 +56,17 @@ AJS.register('Library.Message', function() {
         
         constructor: Message,
 
+        /**
+         * Add message.
+         * --
+         * @param  {string} type
+         * @param  {string} message
+         * @param  {string} title
+         * --
+         * @return {void}
+         */
         _add: function(type, message, title) {
+
             if (title) {
                 message = message + '<h4>' + title + '</h4>';
             }
@@ -64,7 +74,13 @@ AJS.register('Library.Message', function() {
             this.messages_list[type].push(message);
         },
 
-        // Take messages from an array
+        /**
+         * Add messages from an array.
+         * --
+         * @param  {array}  messages
+         * --
+         * @return {object} this
+         */
         from_array: function(messages) {
 
             if (!messages) { return this; }
@@ -76,33 +92,75 @@ AJS.register('Library.Message', function() {
                     this[message.type](message.message);
                 }
             }
+
             return this;
         },
 
+        /**
+         * Will add another message of type warning.
+         * Messages won't be displayed until you call show method.
+         * --
+         * @param  {string} message
+         * @param  {string} title
+         * --
+         * @return {object} this
+         */
         warn: function(message, title) {
             title = title || false;
             this._add('warn', message, title);
             return this;
         },
 
+        /**
+         * Will add another message of type information.
+         * Messages won't be displayed until you call show method.
+         * --
+         * @param  {string} message
+         * @param  {string} title
+         * --
+         * @return {object} this
+         */
         info: function(message, title) {
             title = title || false;
             this._add('info', message, title);
             return this;
         },
 
+        /**
+         * Will add another message of type error.
+         * Messages won't be displayed until you call show method.
+         * --
+         * @param  {string} message
+         * @param  {string} title
+         * --
+         * @return {object} this
+         */
         error: function(message, title) {
             title = title || false;
             this._add('error', message, title);
             return this;
         },
 
+        /**
+         * Will add another message of type success.
+         * Messages won't be displayed until you call show method.
+         * --
+         * @param  {string} message
+         * @param  {string} title
+         * --
+         * @return {object} this
+         */
         success: function(message, title) {
             title = title || false;
             this._add('success', message, title);
             return this;
         },
 
+        /**
+         * Will empty all messages.
+         * --
+         * @return {void}
+         */
         _reset_messages_list: function() {
             this.messages_list = {
                 'warn'   : [],
@@ -112,14 +170,32 @@ AJS.register('Library.Message', function() {
             };
         },
 
+        /**
+         * This is an privately used method to show wrapper.
+         * --
+         * @return {void}
+         */
         _show_wrapper: function() {
             this.opt.$wrapper[this.opt.in_animation](this.opt.animation_speed);
         },
 
+        /**
+         * This is an privately used method to hide wrapper.
+         * --
+         * @return {void}
+         */
         _hide_wrapper: function() {
             this.opt.$wrapper[this.opt.out_animation](this.opt.animation_speed);
         },
 
+        /**
+         * This is an privately used method to push message to stack.
+         * --
+         * @param  {string} messages
+         * @param  {string} type
+         * --
+         * @return {void}
+         */
         _push_to_stack: function(messages, type) {
             var $message = $(template),
                 $content = $message.find('.alert');
@@ -137,6 +213,11 @@ AJS.register('Library.Message', function() {
             this.opt.$wrapper.append($message.html());
         },
 
+        /**
+         * Show all messages.
+         * --
+         * @return {void}
+         */
         show: function() {
             var _self  = this,
                 merged = {};
@@ -189,6 +270,11 @@ AJS.register('Library.Message', function() {
             }
         },
 
+        /**
+         * Hide all messages.
+         * --
+         * @return {void}
+         */
         hide: function() {
             this.opt.$wrapper.hide();
         }
