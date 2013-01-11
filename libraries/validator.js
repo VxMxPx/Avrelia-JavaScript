@@ -110,8 +110,95 @@ AJS.register('Library.Validator', function() {
                 }
             }
 
+            // Rule numeric ----------------------------------------------------
+            if (rule.is_numeric) {
+
+                var rule_is_numeric_int   = parseInt(field.val(), 10),
+                    rule_is_numeric_valid = true;
+
+                if (isNaN(field.val())) {
+                    this.opt.MessageLibrary.warn(rule.message);
+                    rule_is_numeric_valid = false;
+                    this.valid = false;
+                }
+
+                if (typeof rule.is_numeric === 'object') {
+                    if (typeof rule.is_numeric[0] === 'number') {
+                        if (rule_is_whole_number_int < rule.is_numeric[0]) {
+                            if (rule_is_numeric_valid) {
+                                this.opt.MessageLibrary.warn(rule.message);
+                                rule_is_numeric_valid = false;
+                                this.valid = false;
+                            }
+                        }
+                    }
+                    if (typeof rule.is_numeric[1] === 'number') {
+                        if (rule_is_whole_number_int > rule.is_numeric[1]) {
+                            if (rule_is_numeric_valid) {
+                                this.opt.MessageLibrary.warn(rule.message);
+                                rule_is_numeric_valid = false;
+                                this.valid = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Rule is whole number --------------------------------------------
+            if (rule.is_whole_number) {
+
+                var rule_is_whole_number_int   = parseInt(field.val(), 10),
+                    rule_is_whole_number_valid = true;
+
+                if (field.val() !== ("" + rule_is_whole_number_int)) {
+                    this.opt.MessageLibrary.warn(rule.message);
+                    rule_is_whole_number_valid = false;
+                    this.valid = false;
+                }
+
+                if (typeof rule.is_whole_number === 'object') {
+                    if (typeof rule.is_whole_number[0] === 'number') {
+                        if (rule_is_whole_number_int < rule.is_whole_number[0]) {
+                            if (rule_is_whole_number_valid) {
+                                this.opt.MessageLibrary.warn(rule.message);
+                                rule_is_whole_number_valid = false;
+                                this.valid = false;
+                            }
+                        }
+                    }
+                    if (typeof rule.is_whole_number[1] === 'number') {
+                        if (rule_is_whole_number_int > rule.is_whole_number[1]) {
+                            if (rule_is_whole_number_valid) {
+                                this.opt.MessageLibrary.warn(rule.message);
+                                rule_is_whole_number_valid = false;
+                                this.valid = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Rule min_val ----------------------------------------------------
+            if (rule.min_val) {
+
+                if (rule.min_val > parseInt(field.val(), 10)) {
+                    this.opt.MessageLibrary.warn(rule.message);
+                    this.valid = false;
+                }
+            }
+
+            // Rule max_val ----------------------------------------------------
+            if (rule.max_val) {
+
+                if (rule.max_val < parseInt(field.val(), 10)) {
+                    this.opt.MessageLibrary.warn(rule.message);
+                    this.valid = false;
+                }
+            }
+
             // Rule is_email ---------------------------------------------------
             if (rule.is_email) {
+
                 if (field.val().match(/^(.+@.+\..+)$/) === null) {
                     this.opt.MessageLibrary.warn(rule.message);
                     this.valid = false;
