@@ -277,6 +277,21 @@ AJS.register('Library.Message', function() {
          */
         hide: function() {
             this.opt.$wrapper.hide();
+        },
+
+        /**
+         * Will remove all messages.
+         * --
+         * @return {void}
+         */
+        clear: function() {
+            this.opt.$wrapper.html('');
+            this._reset_messages_list();
+            if (this.autohide_timer) {
+                // Crush it now!!!
+                clearTimeout(this.autohide_timer);
+            }
+            this.autohide_timer = false;
         }
     };
 
