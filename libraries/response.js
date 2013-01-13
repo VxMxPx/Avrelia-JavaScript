@@ -75,8 +75,10 @@ AJS.register('Library.Response', function() {
 
                 // Handle messages now!
                 if (this.opt.MessageLibrary && typeof response.messages === 'object') {
-                    this.opt.MessageLibrary.from_array(response.messages);
-                    this.opt.MessageLibrary.show();
+                    if (response.messages.length) {
+                        this.opt.MessageLibrary.from_array(response.messages);
+                        this.opt.MessageLibrary.show();
+                    }
                 }
 
                 // That's it...

@@ -26,9 +26,9 @@ AJS.register('Library.Message', function() {
      *                             Default = false
      * [in_animation]    : string  Which animation to use on show.
      *                             (jQuery animations)
-     *                             Default = false
+     *                             Default = show
      * [out_animation]   : string  Which animation to use on hide.
-     *                             Default = false
+     *                             Default = hide
      */
     var Message = function(options) {
 
@@ -37,9 +37,9 @@ AJS.register('Library.Message', function() {
             can_close       : true,
             group           : true,
             autohide        : false,
-            animation_speed : false,
-            in_animation    : false,
-            out_animation   : false
+            animation_speed : 'normal',
+            in_animation    : 'show',
+            out_animation   : 'hide'
         }, options);
 
         this.messages_list = {
@@ -53,7 +53,7 @@ AJS.register('Library.Message', function() {
     };
 
     Message.prototype = {
-        
+
         constructor: Message,
 
         /**
@@ -199,7 +199,7 @@ AJS.register('Library.Message', function() {
         _push_to_stack: function(messages, type) {
             var $message = $(template),
                 $content = $message.find('.alert');
-            
+
             // Can't close?
             if (!this.opt.can_close) {
                 $message.find('button.close').remove();
@@ -238,11 +238,11 @@ AJS.register('Library.Message', function() {
                 }
             });
 
-            if (_self.opt.group) {
-                if (merged.warn)    _self._push_to_stack(merged.warn,    'warn');
-                if (merged.info)    _self._push_to_stack(merged.info,    'info');
-                if (merged.error)   _self._push_to_stack(merged.error,   'error');
-                if (merged.success) _self._push_to_stack(merged.success, 'success');
+            if (this.opt.group) {
+                if (merged.warn)    this._push_to_stack(merged.warn,    'warn');
+                if (merged.info)    this._push_to_stack(merged.info,    'info');
+                if (merged.error)   this._push_to_stack(merged.error,   'error');
+                if (merged.success) this._push_to_stack(merged.success, 'success');
             }
 
             this._reset_messages_list();
@@ -254,20 +254,15 @@ AJS.register('Library.Message', function() {
                     // Crush it now!!!
                     clearTimeout(this.autohide_timer);
                 }
-                
+
                 // Set new timer
                 this.autohide_timer = setTimeout(
-                                        $.proxy(this._hide_wrapper, this),
+                                        $.proxy(_self._hide_wrapper, _self),
                                         this.opt.autohide);
             }
 
             // Should we show messages in some nice way?
-            if (this.opt.in_animation) {
-                this._show_wrapper();
-            }
-            else {
-                this.opt.$wrapper.show();
-            }
+            this._show_wrapper();
         },
 
         /**
@@ -276,7 +271,7 @@ AJS.register('Library.Message', function() {
          * @return {void}
          */
         hide: function() {
-            this.opt.$wrapper.hide();
+            this._hide_wrapper();
         },
 
         /**
@@ -285,12 +280,15 @@ AJS.register('Library.Message', function() {
          * @return {void}
          */
         clear: function() {
+
             this.opt.$wrapper.html('');
             this._reset_messages_list();
+
             if (this.autohide_timer) {
                 // Crush it now!!!
                 clearTimeout(this.autohide_timer);
             }
+
             this.autohide_timer = false;
         }
     };
