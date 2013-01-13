@@ -10,7 +10,9 @@ AJS.register('Library.Response', function() {
      *
      * Available options are:
      * ======================
-     * [MessageLibrary] -- object  A message library to handle messages.
+     * [MessageLibrary]      -- object  A message library to handle messages.
+     * [OverlayLibrary]      -- object  An overlay library to be displayed on redirects.
+     * [overlay_on_redirect] -- boolean Weather to display overlay when redirecting.
      *
      * Responses which this library will handle properly:
      * ==================================================
@@ -24,7 +26,9 @@ AJS.register('Library.Response', function() {
      */
     var Response = function(options) {
         this.opt = $.extend({}, {
-            MessageLibrary  : false
+            MessageLibrary      : false,
+            OverlayLibrary      : false,
+            overlay_on_redirect : false
         }, options);
     };
 
@@ -33,7 +37,7 @@ AJS.register('Library.Response', function() {
         constructor : Response,
 
         handle      : function(jqXHR, textStatus) {
-            
+
             // What's the status?
             if (textStatus === 'success') {
 
@@ -58,6 +62,12 @@ AJS.register('Library.Response', function() {
                         response.redirect = AJS.url(response.redirect);
                     }
 
+                    // Display overlay on redirect?
+                    if (this.opt.overlay_on_redirect && this.opt.OverlayLibrary) {
+
+                        this.opt.OverlayLibrary.show();
+                    }
+
                     // Here we go ...
                     window.location.replace(response.redirect);
                     return;
@@ -73,7 +83,7 @@ AJS.register('Library.Response', function() {
                 return response;
             }
         }
-    
+
     };
 
     return Response;
