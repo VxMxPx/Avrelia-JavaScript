@@ -54,20 +54,22 @@ AJS.register('Library.Validator', function() {
         },
 
         _validate_field: function(field, rule) {
-            var type = field.attr('type');
+            
+            var type        = field.attr('type'),
+                field_valid = true;
 
             // Required rule ---------------------------------------------------
             if (rule.required === true) {
                 if (type === 'checkbox') {
                     if (field.attr('checked') !== 'checked') {
                         this.opt.MessageLibrary.warn(rule.message);
-                        this.valid = false;
+                        field_valid = false;
                     }
                 }
                 else {
                     if (!field.val().length) {
                         this.opt.MessageLibrary.warn(rule.message);
-                        this.valid = false;
+                        field_valid = false;
                     }
                 }
             }
@@ -76,7 +78,7 @@ AJS.register('Library.Validator', function() {
             if (rule.length) {
                 if (field.val().length !== rule.length) {
                     this.opt.MessageLibrary.warn(rule.message);
-                    this.valid = false;
+                    field_valid = false;
                 }
             }
 
@@ -84,7 +86,7 @@ AJS.register('Library.Validator', function() {
             if (rule.min_length) {
                 if (field.val().length < rule.min_length) {
                     this.opt.MessageLibrary.warn(rule.message);
-                    this.valid = false;
+                    field_valid = false;
                 }
             }
 
@@ -98,7 +100,7 @@ AJS.register('Library.Validator', function() {
                 if (rule_equals_val === false ||
                         field.val() !== rule_equals_val) {
                     this.opt.MessageLibrary.warn(rule.message);
-                    this.valid = false;
+                    field_valid = false;
                 }
             }
 
@@ -106,7 +108,7 @@ AJS.register('Library.Validator', function() {
             if (rule.is_match) {
                 if (field.val().match(rule.is_match) === null) {
                     this.opt.MessageLibrary.warn(rule.message);
-                    this.valid = false;
+                    field_valid = false;
                 }
             }
 
@@ -119,7 +121,7 @@ AJS.register('Library.Validator', function() {
                 if (isNaN(field.val())) {
                     this.opt.MessageLibrary.warn(rule.message);
                     rule_is_numeric_valid = false;
-                    this.valid = false;
+                    field_valid = false;
                 }
 
                 if (typeof rule.is_numeric === 'object') {
@@ -128,7 +130,7 @@ AJS.register('Library.Validator', function() {
                             if (rule_is_numeric_valid) {
                                 this.opt.MessageLibrary.warn(rule.message);
                                 rule_is_numeric_valid = false;
-                                this.valid = false;
+                                field_valid = false;
                             }
                         }
                     }
@@ -137,7 +139,7 @@ AJS.register('Library.Validator', function() {
                             if (rule_is_numeric_valid) {
                                 this.opt.MessageLibrary.warn(rule.message);
                                 rule_is_numeric_valid = false;
-                                this.valid = false;
+                                field_valid = false;
                             }
                         }
                     }
@@ -153,7 +155,7 @@ AJS.register('Library.Validator', function() {
                 if (field.val() !== ("" + rule_is_whole_number_int)) {
                     this.opt.MessageLibrary.warn(rule.message);
                     rule_is_whole_number_valid = false;
-                    this.valid = false;
+                    field_valid = false;
                 }
 
                 if (typeof rule.is_whole_number === 'object') {
@@ -162,7 +164,7 @@ AJS.register('Library.Validator', function() {
                             if (rule_is_whole_number_valid) {
                                 this.opt.MessageLibrary.warn(rule.message);
                                 rule_is_whole_number_valid = false;
-                                this.valid = false;
+                                field_valid = false;
                             }
                         }
                     }
@@ -171,7 +173,7 @@ AJS.register('Library.Validator', function() {
                             if (rule_is_whole_number_valid) {
                                 this.opt.MessageLibrary.warn(rule.message);
                                 rule_is_whole_number_valid = false;
-                                this.valid = false;
+                                field_valid = false;
                             }
                         }
                     }
@@ -183,7 +185,7 @@ AJS.register('Library.Validator', function() {
 
                 if (rule.min_val > parseInt(field.val(), 10)) {
                     this.opt.MessageLibrary.warn(rule.message);
-                    this.valid = false;
+                    field_valid = false;
                 }
             }
 
@@ -192,7 +194,7 @@ AJS.register('Library.Validator', function() {
 
                 if (rule.max_val < parseInt(field.val(), 10)) {
                     this.opt.MessageLibrary.warn(rule.message);
-                    this.valid = false;
+                    field_valid = false;
                 }
             }
 
@@ -201,8 +203,17 @@ AJS.register('Library.Validator', function() {
 
                 if (field.val().match(/^(.+@.+\..+)$/) === null) {
                     this.opt.MessageLibrary.warn(rule.message);
-                    this.valid = false;
+                    field_valid = false;
                 }
+            }
+
+            // Final checking --------------------------------------------------
+            if (!field_valid) {
+                this.valid = false;
+                field.addClass('ajs_validation_invalid');
+            }
+            else {
+                field.removeClass('ajs_validation_invalid');
             }
         },
 
