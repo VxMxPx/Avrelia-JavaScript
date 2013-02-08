@@ -10,6 +10,28 @@ AJS.register('Library.Validator', function() {
      * $form            -- array  jQuery Reference to the form we wanna check.
      * [MessageLibrary] -- object If you wanna to display message when the
      *                            field validation fails.
+     * Valid rules are:
+     * ================
+     * required         -- boolean  Fields need to have value (can't be empty)
+     * is_length        -- integer  Field's value needs exact length
+     * min_length       -- integer  Minimum length of field's value
+     * is_true          -- boolean  You can use expression, example:
+     *                              stars.count > 12, if not true, validation
+     *                              will failed.
+     * equals           -- string   jQuery selector for field from which 2nd
+     *                              value will be selected. This is useful to
+     *                              check if two passwords match.
+     * is_match         -- regex    Does value of our field match particular
+     *                              regular expression.
+     * is_numeric       -- mixed    You can use [0, 1] to check if number is in
+     *                              particular range.
+     * is_whole_number  -- mixed    Check if we have full number (not float),
+     *                              You can use [0, 1] to check if number is in
+     *                              particular range.
+     * min_val          -- integer  Field's value needs to be at least...
+     * max_val          -- integer  Field's value must not be more than...
+     * is_email         -- string   Do we have "valid" email, (will check only
+     *                              for (any)@(any).(any))
      */
     var Validator = function(options) {
 
@@ -74,9 +96,18 @@ AJS.register('Library.Validator', function() {
                 }
             }
 
-            // Rule length -----------------------------------------------------
-            if (rule.length) {
-                if (field.val().length !== rule.length) {
+            // Rule is_length --------------------------------------------------
+            if (rule.is_length) {
+                if (field.val().length !== rule.is_length) {
+                    this.opt.MessageLibrary.warn(rule.message);
+                    field_valid = false;
+                }
+            }
+
+            // Rule is_true ----------------------------------------------------
+            if (typeof (rule.is_true) !== 'undefined') {
+                // Ensure boolean value, and check if it's not true
+                if (!!rule.is_true !== true) {
                     this.opt.MessageLibrary.warn(rule.message);
                     field_valid = false;
                 }
