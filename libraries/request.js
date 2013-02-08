@@ -49,6 +49,9 @@ AJS.register('Library.Request', function() {
         // Temporarily appended URI.
         this.appeneded = null;
 
+        // Update placeholder
+        this.placeholder = [];
+
         // All requests made so far.
         this.stack = [];
     };
@@ -115,6 +118,7 @@ AJS.register('Library.Request', function() {
 
             var full_url = this.opt.url;
 
+            // Append
             if (this.appended) {
 
                 // Question mark in our URL?
@@ -141,6 +145,20 @@ AJS.register('Library.Request', function() {
 
                 // Cleanup the trash
                 full_url = full_url.replace(/([^:\/\/])[\/]+/g, '$1/');
+            }
+
+            // Placeholder
+            if (this.placeholder.length) {
+
+                for (var i = this.placeholder.length - 1; i >= 0; i--) {
+                    
+                    var pkey = this.placeholder[i][0],
+                        pval = this.placeholder[i][1];
+
+                    full_url = full_url.replace('{' + pkey + '}', pval);
+                }
+
+                this.placeholder = [];
             }
 
             return full_url;
@@ -237,6 +255,21 @@ AJS.register('Library.Request', function() {
         append_uri: function(uri) {
 
             this.appended = uri;
+            return this;
+        },
+
+        /**
+         * Replace uri placeholder {placeholder} with value. This will be done
+         * teporarily and undone after the request.
+         * --
+         * @param  {string} placeholder
+         * @param  {string} value
+         * --
+         * @return {object} this
+         */
+        update_uri: function(placeholder, value) {
+
+            this.placeholder.push([placeholder, value]);
             return this;
         },
 

@@ -8,7 +8,7 @@ AJS.register('Library.Overlay', function() {
      * Construct overlay object - use: o = new Lib.Overlay();
      * @param {object} options Following options are available:
      * - loading   : boolean           Loading indicator will be displayed.
-     * - parent    : jQuery reference  Parent element to which overlay will be attached.
+     * - $parent   : jQuery reference  Parent element to which overlay will be attached.
      *                                 Leave it empty for full screen overlay.
      * - padding   : integer           Overlay padding when displayed. Only if
      *                                 you provided parent element.
