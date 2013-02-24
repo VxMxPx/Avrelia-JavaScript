@@ -18,6 +18,15 @@ AJS.register('Library.Uri', function() {
         }
     };
 
+    /**
+     * Get current full uri (including #!/)
+     * --
+     * @return {string}
+     */
+    _public.current = function() {
+        return window.location.pathname + (window.location.hash || '');
+    };
+
     // GET SEGMENTS, trim start and ending slash
     segments = window.location.pathname.replace(/^\/|\/$/g, '');
     segments = segments.split('/');
