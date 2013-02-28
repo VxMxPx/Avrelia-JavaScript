@@ -39,7 +39,7 @@ AJS.register('Library.Validator', function() {
             $form          : false,
             MessageLibrary : false
         }, options);
-        
+
         this.valid  = true;
         this.fields = [];
     };
@@ -76,7 +76,7 @@ AJS.register('Library.Validator', function() {
         },
 
         _validate_field: function(field, rule) {
-            
+
             var type        = field.attr('type'),
                 field_valid = true;
 

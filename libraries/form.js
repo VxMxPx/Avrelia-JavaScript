@@ -43,13 +43,15 @@ AJS.register('Library.Form', function() {
             }
 
             // Probably yes!
-            if (typeof this.opt.$form[0]['reset'] === 'function') {
-                this.opt.$form[0].reset();
-                return this;
+            if (typeof this.opt.$form[0] !== 'undefined') {
+                if (typeof this.opt.$form[0]['reset'] === 'function') {
+                    this.opt.$form[0].reset();
+                    return this;
+                }
             }
 
             // None of them, throw some error
-            Lib.Log.war('Seems form has no method reset(), can\'t proceed.');
+            Lib.Log.warn('Seems form has no method reset(), can\'t proceed.');
             return this;
         },
 
