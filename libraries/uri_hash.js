@@ -48,7 +48,7 @@ AJS.register('Library.UriHash', function() {
             if (segments[i] === false) {
                 continue;
             }
-            
+
             if (typeof segments[i].key !== 'undefined') {
 
                 full_hash = full_hash + '/' + segments[i].key + '=' + segments[i].val;
@@ -82,7 +82,7 @@ AJS.register('Library.UriHash', function() {
         else {
 
             for (var i = segments.length - 1; i >= 0; i--) {
-                
+
                 if (typeof segments[i].key !== 'undefined') {
 
                     if (segments[i].key === segment) {
@@ -140,7 +140,7 @@ AJS.register('Library.UriHash', function() {
             if (_public.get(segment) !== false) {
 
                 for (var i = segments.length - 1; i >= 0; i--) {
-                    
+
                     if (typeof segments[i].key !== 'undefined') {
 
                         if (segments[i].key === segment) {
@@ -191,7 +191,7 @@ AJS.register('Library.UriHash', function() {
         else {
 
             for (var i = segments.length - 1; i >= 0; i--) {
-                
+
                 if (typeof segments[i].key !== 'undefined') {
 
                     if (segments[i].key === segment) {
@@ -220,7 +220,7 @@ AJS.register('Library.UriHash', function() {
         else {
 
             for (var i = 1; i < temp_segments.length; i++) {
-                
+
                 if (temp_segments[i].match(/\=/)) {
 
                     var sub_segments = temp_segments[i].split('=', 2);

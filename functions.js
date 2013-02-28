@@ -12,7 +12,7 @@ AJS.url = function(uri) {
     if (base_url.substr(-1, 1) === '/') {
         base_url = base_url.substr(0, base_url.length - 1);
     }
-    
+
     if (uri.substr(0, 1) === '/') {
         uri = uri.substr(1);
     }

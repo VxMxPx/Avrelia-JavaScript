@@ -56,7 +56,7 @@ AJS.register('Library.Overlay', function() {
         if (!this.opt.id) {
             this.opt.id = 'ajs_overlay_' + count;
         }
-        
+
         // Set unique ID and classes to the element
         this.$overlay.attr('id', this.opt.id);
 
@@ -101,7 +101,7 @@ AJS.register('Library.Overlay', function() {
          * @return {object} this
          */
         freeze : function() {
-            
+
             this.is_freezed = true;
             return this;
         },

@@ -151,7 +151,7 @@ AJS.register('Library.Request', function() {
             if (this.placeholder.length) {
 
                 for (var i = this.placeholder.length - 1; i >= 0; i--) {
-                    
+
                     var pkey = this.placeholder[i][0],
                         pval = this.placeholder[i][1];
 
@@ -225,7 +225,7 @@ AJS.register('Library.Request', function() {
          * @return {mixed} jqXHR | Response Library's response (oO)
          */
         _on_complete: function(jqXHR, textStatus) {
-            
+
             var response = '';
 
             this.in_progress = this.in_progress-1;
@@ -239,7 +239,7 @@ AJS.register('Library.Request', function() {
                 return this.opt.ResponseLibrary.handle(jqXHR, textStatus);
             }
             else {
-                
+
                 return jqXHR;
             }
         },

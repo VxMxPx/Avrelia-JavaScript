@@ -182,11 +182,11 @@ AJS.register('Library.Popover', function() {
 
             // Try to set placement now
             for (var i = 0, l = this.opt.placement.length; i < l; i++) {
-                
+
                 var current = this.opt.placement[i];
 
                 if (current === 'top') {
-                    
+
                     if (placement.top.top - element_dimension.height < $(document).scrollTop()) {
                         continue;
                     }
@@ -308,14 +308,14 @@ AJS.register('Library.Popover', function() {
          * @return {void}
          */
         show : function(placement) {
-            
+
             if (this.is_visible) { return; }
 
             // Set is_visible to true right now
             this.is_visible = true;
 
             this.$element.css('display', 'none');
-            
+
             if (!this.is_appended) {
 
                 this.$element.appendTo('body');
@@ -392,7 +392,7 @@ AJS.register('Library.Popover', function() {
         block : function(is_hard) {
 
         },
-        
+
         /**
          * Unblocks the popover.
          * --

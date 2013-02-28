@@ -8,7 +8,7 @@ AJS.register('Library.Base64', function() {
 
     // private method for UTF-8 encoding
     function _utf8_encode(string) {
-        
+
         string = string.replace(/\r\n/g,"\n");
         var utftext = "";
 
@@ -35,10 +35,12 @@ AJS.register('Library.Base64', function() {
 
     // private method for UTF-8 decoding
     function _utf8_decode(utftext) {
-        
-        var string = "",
-            i = 0,
-            c = c1 = c2 = 0;
+
+        var string = '',
+            i      = 0,
+            c      = 0,
+            c1     = 0,
+            c2     = 0;
 
         while ( i < utftext.length ) {
 
@@ -101,7 +103,7 @@ AJS.register('Library.Base64', function() {
 
     // public method for decoding
     _public.decode = function (input) {
-        
+
         var output = "",
             chr1, chr2, chr3,
             enc1, enc2, enc3, enc4,
