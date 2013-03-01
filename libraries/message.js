@@ -37,7 +37,7 @@ AJS.register('Library.Message', function() {
             can_close       : true,
             group           : true,
             autohide        : false,
-            animation_speed : 'normal',
+            animation_speed : null,
             in_animation    : 'show',
             out_animation   : 'hide'
         }, options);
