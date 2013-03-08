@@ -5,6 +5,16 @@ AJS.register('Library.Uri', function() {
         segments = [];
 
     /**
+     * Will extract segments from the URI and put them to the segments array
+     * @return {[type]} [description]
+     */
+    function _extract_segments() {
+        // GET SEGMENTS, trim start and ending slash
+        segments = window.location.pathname.replace(/^\/|\/$/g, '');
+        segments = segments.split('/');
+    }
+
+    /**
      * Get particular URI's segment
      * --
      * @param  {integer} index
@@ -12,7 +22,7 @@ AJS.register('Library.Uri', function() {
      * @return {string}
      */
     _public.segment = function(index) {
-
+        _extract_segments();
         if (typeof segments[index] !== 'undefined') {
             return segments[index];
         }
@@ -26,10 +36,6 @@ AJS.register('Library.Uri', function() {
     _public.current = function() {
         return window.location.pathname + (window.location.hash || '');
     };
-
-    // GET SEGMENTS, trim start and ending slash
-    segments = window.location.pathname.replace(/^\/|\/$/g, '');
-    segments = segments.split('/');
 
     return _public;
 
