@@ -44,6 +44,7 @@ AJS.register('Library.Validator', function() {
         this.fields = [];
     };
 
+
     Validator.prototype = {
 
         constructor: Validator,

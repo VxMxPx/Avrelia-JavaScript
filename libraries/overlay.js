@@ -7,30 +7,31 @@ AJS.register('Library.Overlay', function() {
     /**
      * Construct overlay object - use: o = new Lib.Overlay();
      * @param {object} options Following options are available:
-     * - loading   : boolean           Loading indicator will be displayed.
-     * - $parent   : jQuery reference  Parent element to which overlay will be attached.
-     *                                 Leave it empty for full screen overlay.
-     * - padding   : integer           Overlay padding when displayed. Only if
-     *                                 you provided parent element.
-     *                                 NOTE: Padding is applied only when using
-     *                                 parent for positioning.
-     * - can_close : boolean           If true, click on overlay will hide it.
-     * - on_click  : function          Callback for when overlay is clicked.
-     * - id        : string            Specific ID.
-     * - classes   : array             Specific classes.
+     * - loading     : boolean           Loading indicator will be displayed.
+     * - $parent     : jQuery reference  Parent element to which overlay will be attached.
+     *                                   Leave it empty for full screen overlay.
+     * - padding     : integer           Overlay padding when displayed. Only if
+     *                                   you provided parent element.
+     *                                   NOTE: Padding is applied only when using
+     *                                   parent for positioning.
+     * - can_close   : boolean           If true, click on overlay will hide it.
+     * - on_click    : function          Callback for when overlay is clicked.
+     * - id          : string            Specific ID.
+     * - classes     : array             Specific classes.
      */
     function Overlay(options) {
 
         // General options
         this.opt = $.extend({}, {
-            loading   : false,
-            $parent   : false,
-            text      : null,
-            padding   : 0,
-            can_close : false,
-            on_click  : false,
-            id        : null,
-            classes   : []
+            loading     : false,
+            $parent     : false,
+            text        : null,
+            padding     : 0,
+            auto_resize : false,
+            can_close   : false,
+            on_click    : false,
+            id          : null,
+            classes     : []
         } , options);
 
         // Create overlay element from template
@@ -118,6 +119,36 @@ AJS.register('Library.Overlay', function() {
         },
 
         /**
+         * Will update overlay's dimension, taken from parent
+         * --
+         * @param {boolean} animated Should dimension change be animated?
+         * --
+         * @return {void}
+         */
+        update : function(animated) {
+            // If geometry wasn't set, and we do have parent,
+            // we'll use parent to set geometry.
+            if (this.opt.$parent) {
+                geometry = {
+                    top:     this.opt.$parent.offset().top - this.opt.padding,
+                    left:    this.opt.$parent.offset().left - this.opt.padding,
+                    width:   this.opt.$parent.outerWidth() + (this.opt.padding * 2),
+                    height:  this.opt.$parent.outerHeight() + (this.opt.padding * 2)
+                };
+            }
+
+            // If we have geometry, either set by parent or pass in, we'll use it
+            if (typeof geometry === 'object') {
+                this.$overlay[animated ? 'animate' : 'css']({
+                    top      : geometry.top,
+                    left     : geometry.left,
+                    width    : geometry.width,
+                    height   : geometry.height
+                });
+            }
+        },
+
+        /**
          * Simply so, display the overlay, if not already visible.
          * --
          * @param  {object} geometry You can specify where exactly to show overlay,
@@ -152,10 +183,10 @@ AJS.register('Library.Overlay', function() {
             // we'll use parent to set geometry.
             if (!geometry && this.opt.$parent) {
                 geometry = {
-                    top:     this.opt.$parent.offset().top - _this.opt.padding,
-                    left:    this.opt.$parent.offset().left - _this.opt.padding,
-                    width:   this.opt.$parent.outerWidth() + (_this.opt.padding * 2),
-                    height:  this.opt.$parent.outerHeight() + (_this.opt.padding * 2)
+                    top:     this.opt.$parent.offset().top - this.opt.padding,
+                    left:    this.opt.$parent.offset().left - this.opt.padding,
+                    width:   this.opt.$parent.outerWidth() + (this.opt.padding * 2),
+                    height:  this.opt.$parent.outerHeight() + (this.opt.padding * 2)
                 };
             }
 
