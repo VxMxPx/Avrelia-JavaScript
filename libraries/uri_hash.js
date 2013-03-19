@@ -185,7 +185,9 @@ AJS.register('Library.UriHash', function() {
      * @return {object} this
      */
     _public.remove = function(segment) {
-        var i = 0;
+        var i = 0,
+            new_segments = [];
+
         if (typeof segment === 'number') {
             if (typeof segments[segment] !== 'undefined') {
                 segments[segment] = false;
