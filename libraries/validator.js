@@ -1,7 +1,7 @@
 AJS.register('Library.Validator', function() {
 
     /**
-     * Validator allow us to easily check values of various form fields. 
+     * Validator allow us to easily check values of various form fields.
      * Usage example:
      * Validator
      * .field('input[name=address_country]', [
@@ -34,9 +34,12 @@ AJS.register('Library.Validator', function() {
      * min_length       -- integer  Minimum length of field's value
      * is_not           -- mixed    Field's value needs to be different than
      *                              the value provided.
-     * is_true          -- boolean  You can use expression, example:
+     * is_true          -- mixed    You can use expression, example:
      *                              stars.count > 12, if not true, validation
-     *                              will fail.
+     *                              will fail. Value inputed can be boolean
+     *                              (the result of expression) OR function.
+     *                              To function field will be passed as a first
+     *                              argument. Function should return boolean.
      * equals           -- string   jQuery selector for field from which 2nd
      *                              value will be selected. This is useful to
      *                              check if two passwords match.
@@ -97,9 +100,9 @@ AJS.register('Library.Validator', function() {
 
         _validate_field: function(field, rule) {
 
-            var type        = field.attr('type'),
+            var type        = field.length > 1 ? 'collection' : field.attr('type'),
                 field_valid = true,
-                field_value = field.val();
+                field_value = type !== 'collection' ? field.val() : null;
 
             // Required rule ---------------------------------------------------
             if (rule.required === true) {
@@ -135,6 +138,11 @@ AJS.register('Library.Validator', function() {
 
             // Rule is_true ----------------------------------------------------
             if (typeof (rule.is_true) !== 'undefined') {
+                // Do we have function?
+                if (typeof rule.is_true === 'function') {
+                    rule.is_true = rule.is_true(field);
+                }
+
                 // Ensure boolean value, and check if it's not true
                 if (!!rule.is_true !== true) {
                     this.opt.MessageLibrary.warn(rule.message);
@@ -186,7 +194,7 @@ AJS.register('Library.Validator', function() {
 
                 if (typeof rule.is_numeric === 'object') {
                     if (typeof rule.is_numeric[0] === 'number') {
-                        if (rule_is_whole_number_int < rule.is_numeric[0]) {
+                        if (rule_is_numeric_int < rule.is_numeric[0]) {
                             if (rule_is_numeric_valid) {
                                 this.opt.MessageLibrary.warn(rule.message);
                                 rule_is_numeric_valid = false;
@@ -195,7 +203,7 @@ AJS.register('Library.Validator', function() {
                         }
                     }
                     if (typeof rule.is_numeric[1] === 'number') {
-                        if (rule_is_whole_number_int > rule.is_numeric[1]) {
+                        if (rule_is_numeric_int > rule.is_numeric[1]) {
                             if (rule_is_numeric_valid) {
                                 this.opt.MessageLibrary.warn(rule.message);
                                 rule_is_numeric_valid = false;
